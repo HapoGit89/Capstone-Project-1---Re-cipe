@@ -4,7 +4,6 @@ from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt()
 
-
 db = SQLAlchemy()
 
 def connect_db(app):
