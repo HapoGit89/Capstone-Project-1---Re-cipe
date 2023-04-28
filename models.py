@@ -38,6 +38,13 @@ class Users(db.Model):
         secondary="favourites",
         backref = 'favouring_users'
     )
+    ratings = db.relationship("Ratings", backref="rating_user", cascade="all, delete-orphan")
+    rated_recipes = db.relationship(
+        "Recipes",
+        secondary="ratings", viewonly = True,
+        backref = 'rating_users'
+    )
+    
 
 
 class Recipes(db.Model):
@@ -53,7 +60,7 @@ class Recipes(db.Model):
                    autoincrement = True)
     title = db.Column(db.Text,
                          nullable = False)
-    spoonacular_id = db.Column(db.Integer,
+    spoonacular_id = db.Column(db.Integer, unique = True,
                                nullable = False)
     diets = db.Column(db.JSON)
     ready_in = db.Column(db.Integer)
@@ -66,12 +73,19 @@ class Recipes(db.Model):
     summary = db.Column(db.Text)
     users = db.relationship(
         "Users",
-        secondary="favourites",
+        secondary="favourites", viewonly = True,
         backref = 'favoured_recipes')
     ingredients = db.relationship(
         "Ingredients",
         secondary="recipe_ingredients",
         backref = 'recipes')
+    recipe_ratings = db.relationship("Ratings", backref="ratied_recipe", cascade="all, delete-orphan")
+    rated_by = db.relationship(
+        "Users",
+        secondary="ratings",
+        backref = 'recipes_rated'
+    )
+
 
 class Ingredients(db.Model):
         """Ingredients Table"""
@@ -85,14 +99,14 @@ class Ingredients(db.Model):
         id = db.Column(db.Integer,
                    primary_key = True,
                    autoincrement = True)
-        name = db.Column(db.String(50),
+        name = db.Column(db.String(50), unique = True,
                          nullable = False)
         image = db.Column(db.Text)
-        spoonacular_id = db.Column(db.Integer, 
+        spoonacular_id = db.Column(db.Integer, unique = True,
                           nullable = False)
         in_recipes = db.relationship(
         "Recipes",
-        secondary="recipe_ingredients",
+        secondary="recipe_ingredients", viewonly = True,
         backref = 'used_ingredients')
 
         
@@ -125,7 +139,7 @@ class Ratings(db.Model):
         __tablename__ = "ratings"
 
         def __repr__(self):
-            return f"Favourite id:{self.id} for user {self.user_id} and recipe {self.recipe_id}"
+            return f"Rating id:{self.id} for user {self.user_id} and recipe {self.recipe_id} rating {self.rating}"
 
         id = db.Column(db.Integer,
                    primary_key = True,
