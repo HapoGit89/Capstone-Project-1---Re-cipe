@@ -62,13 +62,16 @@ class Recipes(db.Model):
                          nullable = False)
     spoonacular_id = db.Column(db.Integer, unique = True,
                                nullable = False)
-    diets = db.Column(db.JSON)
+    diets = db.Column(db.ARRAY)
     ready_in = db.Column(db.Integer)
     image_url = db.Column(db.String)
-    cuisine = db.Column(db.String)
+    cuisine = db.Column(db.ARRAY)
     health_score = db.Column(db.Integer)
-    steps = db.Column(db.JSON)
+    steps = db.Column(db.Text)
     dairy_free = db.Column(db.Boolean)
+    gluten_free = db.Column(db.Boolean)
+    vegan = db.Column(db.Boolean)
+    vegetarian = db.Column(db.Boolean)
     servings = db.Column(db.Integer)
     summary = db.Column(db.Text)
     users = db.relationship(
@@ -129,8 +132,6 @@ class Favourites(db.Model):
                     db.ForeignKey('recipes.id', ondelete='cascade'))
         db.UniqueConstraint('user_id', 'recipe_id')
         
-
-
 
 
 class Ratings(db.Model):
