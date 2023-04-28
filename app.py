@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 # from forms import UserAddForm, LoginForm, MessageForm, UserEditForm
 from models import db, connect_db, Users, Recipes, Ingredients, RecipeIngredients, Favourites
-
+from wrapper import complex_recipe_search, recipe_detail_search
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
@@ -28,7 +28,13 @@ connect_db(app)
 with app.app_context():
     db.create_all()
 
+@app.route("/")
+def show_start():
+    return redirect("/search")
 
-app.route("/search", methods = ["GET", "POST"])
+@app.route("/search", methods = ["GET", "POST"])
+def show_search_page():
+    recipe = complex_recipe_search("lol", 100)
+    return render_template("search.html", recipe = recipe)
 
 
