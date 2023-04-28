@@ -28,3 +28,7 @@ connect_db(app)
 with app.app_context():
     db.create_all()
 
+
+app.route("/search", methods = ["GET", "POST"])
+
+

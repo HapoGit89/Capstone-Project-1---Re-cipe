@@ -62,10 +62,10 @@ class Recipes(db.Model):
                          nullable = False)
     spoonacular_id = db.Column(db.Integer, unique = True,
                                nullable = False)
-    diets = db.Column(db.ARRAY)
+    diets = db.Column(db.JSON)
     ready_in = db.Column(db.Integer)
     image_url = db.Column(db.String)
-    cuisine = db.Column(db.ARRAY)
+    cuisine = db.Column(db.JSON)
     health_score = db.Column(db.Integer)
     steps = db.Column(db.Text)
     dairy_free = db.Column(db.Boolean)
@@ -88,6 +88,17 @@ class Recipes(db.Model):
         secondary="ratings",
         backref = 'recipes_rated'
     )
+
+    @classmethod
+    def is_recipe_in_db(cls,recipe_id):
+        recipes_in_db_id = [recipe.spoonacular_id for recipe in cls.query.all()]
+        if recipe_id in recipes_in_db_id:
+             return True
+        else:
+             return False
+         
+
+
 
 
 class Ingredients(db.Model):
