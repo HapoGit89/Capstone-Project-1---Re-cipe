@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <form id="recipe-search" method="POST" style = "padding-top: 70px;">
+    <form id="recipe-search" method="POST" style = "padding-top: 20%;">
         {{ form.hidden_tag() }} 
       
         
@@ -9,43 +9,48 @@
                 {{form.query.label}}
                 {{form.query (class_="form-control")}}
                 </div>
-                <div class="form check form-check-inline">
-                    {{form.veggie (class_="form-check-input")}}
-                    {{form.veggie.label (class_="form-check-label")}}
+                <div class = "form-group">
+                    <div class="form check form-check-inline">
+                        {{form.veggie (class_="form-check-input")}}
+                        {{form.veggie.label (class_="form-check-label")}}
+                    </div>
+                    <div class="form check form-check-inline"> 
+                        {{form.vegan (class_="form-check-input")}}   
+                        {{form.vegan.label (class_="form-check-label")}}
+                    </div>
+                    <div class="form check form-check-inline">
+                        {{form.gluten_free (class_="form-check-input")}}
+                        {{form.gluten_free.label (class_="form-check-label")}}
+                    </div>
+                    <div class="form check form-check-inline">
+                        {{form.dairy_free (class_="form-check-input")}}
+                        {{form.dairy_free.label (class_="form-check-label")}}
+                    </div>
                 </div>
-                <div class="form check form-check-inline"> 
-                    {{form.vegan (class_="form-check-input")}}   
-                    {{form.vegan.label (class_="form-check-label")}}
+                <div class="form-group">
+                    <div>
+                        {{form.diet.label}}
+                        {{form.diet (class_="form-select-sm")}}  
+                    </div>
+                    <div>
+                        {{form.cuisine.label}}
+                        {{form.cuisine (class_="form-select-sm")}}   
+                    </div>
+                    <div>
+                        {{form.intolerance.label}}
+                        {{form.intolerance (class_="form-select-sm")}}
+                       
+                    </div>
+                    <div>
+                        {{form.exclude.label}}
+                        {{form.exclude}}   
+                    </div>
                 </div>
-                <div class="form check form-check-inline">
-                    {{form.gluten_free (class_="form-check-input")}}
-                    {{form.gluten_free.label (class_="form-check-label")}}
-                </div>
-                <div class="form check form-check-inline">
-                    {{form.dairy_free (class_="form-check-input")}}
-                    {{form.dairy_free.label (class_="form-check-label")}}
-                </div>
-                <div>
-                    {{form.diet.label}}
-                    {{form.diet (class_="form-select-sm")}}  
-                </div>
-                <div>
-                    {{form.cuisine.label}}
-                    {{form.cuisine (class_="form-select-sm")}}   
-                </div>
-                <div>
-                    {{form.intolerance.label}}
-                    {{form.intolerance (class_="form-select-sm")}}
-                   
-                </div>
-                <div>
-                    {{form.exclude.label}}
-                    {{form.exclude}}   
-                </div>
+                
                
                
 
-        <button type="submit" class="btn btn-secondary">Search Re:Cipe</button>
+        <button type="submit" class="btn" style="background-color: rgb(176, 195, 157);">Search Re:Cipe</button>
       </div>
         
       </form>
