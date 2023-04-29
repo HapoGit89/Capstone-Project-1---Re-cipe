@@ -1,6 +1,8 @@
 
 import os
+from re import I
 from telnetlib import SE
+from this import d
 
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
@@ -36,7 +38,28 @@ def show_start():
 
 @app.route("/search", methods = ["GET", "POST"])
 def show_search_page():
+
     form = SearchForm()
-    return render_template("search.html", form = form)
+
+    if form.validate_on_submit():
+        query = form.query.data
+        veggie = form.veggie.data
+        vegan = form.vegan.data
+        gluten_free = form.gluten_free.data
+        dairy_free = form.dairy_free.data
+        diet = form.diet.data
+        cuisine = form.cuisine.data
+        intolerance = form.intolerance.data
+        exclude = form.exclude.data
+
+        recipes = complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diet, cuisine, intolerance, exclude)
+
+
+        print (recipes)
+        return "Form submitted"
+
+    else:
+        
+        return render_template("search.html", form = form)
 
 
