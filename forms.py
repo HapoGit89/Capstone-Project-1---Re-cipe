@@ -25,5 +25,5 @@ class SearchForm(FlaskForm):
     diet = SelectMultipleField('diet (select mulitple pressing cmd)', choices = diets)
     cuisine = SelectField('cuisine', choices = cuisines)
     intolerance = SelectMultipleField('intolerance (select mulitple pressing cmd)', choices = intolerances)
-    exclude = StringField ('exclude')
+    exclude = StringField ('exclude (if multiple seperate by comma)')
 

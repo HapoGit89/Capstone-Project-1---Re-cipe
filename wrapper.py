@@ -132,7 +132,8 @@ response_hard_coded = {'results': [{'id': 653251,           # hard coded sample 
 
 def complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, cuisine, intolerance, exclude):
     """ Returns a python dict containing Spoonacular Compley Search Results for given arguments"""
-    diet = ','.join(diets)
+    
+    diet = ','.join(diets)    # join checkboxes with multiple choice fields for query
     if veggie == True:
         diet += ',vegetarian'
     if vegan == True:
@@ -142,13 +143,10 @@ def complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, 
     if dairy_free == True:
         diet += ',dairy%20free'
 
+    intolerances = ','.join(intolerance) # join intolerances array into tuples
     
-    print(f"!!!!!!!!!!!!DIET: {diet}")
-    
-    resp = requests.get(f"https://api.spoonacular.com/recipes/complexSearch?apiKey=3de123cdc6f14ce0a9bc46a5e5edeb2d&query={query}&number=1&diet={diet}") 
+    resp = requests.get(f"https://api.spoonacular.com/recipes/complexSearch?apiKey=3de123cdc6f14ce0a9bc46a5e5edeb2d&query={query}&number=1&diet={diet}&cuisine={cuisine}&intolerances={intolerances}&excludeIngredients={exclude}") 
     response_dict = resp.json()
-    
-
     
     resp = response_dict
     formatted_recipes = {'results':[{'spoonacular_id' : recipe['id'], 'title': recipe['title'], 'image_url': recipe ['image']} for recipe in resp['results']], 'totalResults': resp['totalResults']}
