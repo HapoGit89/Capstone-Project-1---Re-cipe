@@ -53,10 +53,9 @@ def show_search_page():
         exclude = form.exclude.data
 
         results = complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, cuisine, intolerance, exclude)
-        message = ''
-        if results['totalResults']==0:
-            message = "Sorry no results for that Search!"
-        return render_template("results.html", results=results, form = form, message = message)
+        no_of_results = len(results['results'])
+      
+        return render_template("results.html", results=results, form = form, no_of_results=no_of_results)
 
     else:
         
