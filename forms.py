@@ -22,8 +22,8 @@ class SearchForm(FlaskForm):
     vegan = BooleanField('vegan')
     gluten_free = BooleanField('gluten-free')
     dairy_free = BooleanField('dairy-free')
-    diet = SelectMultipleField('diet (select mulitple pressing cmd)', choices = diets)
+    diet = SelectField('diet' , choices = diets)
     cuisine = SelectField('cuisine', choices = cuisines)
-    intolerance = SelectMultipleField('intolerance (select mulitple pressing cmd)', choices = intolerances)
+    intolerance = SelectField('intolerance', choices = intolerances)
     exclude = StringField ('exclude (if multiple seperate by comma)')
 

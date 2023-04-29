@@ -1,24 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <form id="recipe-search" method="POST" style = "padding-top: 70px;"">
-        {{ form.hidden_tag() }} <!--add type=hidden form fields -->
+    <form id="recipe-search" method="POST" style = "padding-top: 70px;">
+        {{ form.hidden_tag() }} 
       
-        {% for field in form
-               if field.widget.input_type != 'hidden' %}
-      
-          <p>
-            {{ field.label }}
-            {{ field }}
-      
-            {% for error in field.errors %}
-              {{ error }}
-            {% endfor %}
-          </p>
-      
-        {% endfor %}
-      
-        <button type="submit">Search Re:Cipe</button>
+        
+            <div class="form-group">
+                {{form.query.label}}
+                {{form.query (class_="form-control")}}
+                </div>
+                <div class="form check form-check-inline">
+                    {{form.veggie (class_="form-check-input")}}
+                    {{form.veggie.label (class_="form-check-label")}}
+                </div>
+                <div class="form check form-check-inline"> 
+                    {{form.vegan (class_="form-check-input")}}   
+                    {{form.vegan.label (class_="form-check-label")}}
+                </div>
+                <div class="form check form-check-inline">
+                    {{form.gluten_free (class_="form-check-input")}}
+                    {{form.gluten_free.label (class_="form-check-label")}}
+                </div>
+                <div class="form check form-check-inline">
+                    {{form.dairy_free (class_="form-check-input")}}
+                    {{form.dairy_free.label (class_="form-check-label")}}
+                </div>
+                <div>
+                    {{form.diet.label}}
+                    {{form.diet (class_="form-select-sm")}}  
+                </div>
+                <div>
+                    {{form.cuisine.label}}
+                    {{form.cuisine (class_="form-select-sm")}}   
+                </div>
+                <div>
+                    {{form.intolerance.label}}
+                    {{form.intolerance (class_="form-select-sm")}}
+                   
+                </div>
+                <div>
+                    {{form.exclude.label}}
+                    {{form.exclude}}   
+                </div>
+               
+               
+
+        <button type="submit" class="btn btn-secondary">Search Re:Cipe</button>
+      </div>
+        
       </form>
 
 </div>
