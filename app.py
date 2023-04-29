@@ -1,5 +1,6 @@
 
 import os
+from telnetlib import SE
 
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
@@ -8,6 +9,7 @@ from sqlalchemy.exc import IntegrityError
 # from forms import UserAddForm, LoginForm, MessageForm, UserEditForm
 from models import db, connect_db, Users, Recipes, Ingredients, RecipeIngredients, Favourites
 from wrapper import complex_recipe_search, recipe_detail_search
+from forms import SearchForm
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
@@ -34,7 +36,7 @@ def show_start():
 
 @app.route("/search", methods = ["GET", "POST"])
 def show_search_page():
-    recipe = complex_recipe_search("lol", 100)
-    return render_template("search.html", recipe = recipe)
+    form = SearchForm()
+    return render_template("search.html", form = form)
 
 
