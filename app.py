@@ -47,16 +47,16 @@ def show_search_page():
         vegan = form.vegan.data
         gluten_free = form.gluten_free.data
         dairy_free = form.dairy_free.data
-        diet = form.diet.data
+        diets = form.diet.data
         cuisine = form.cuisine.data
         intolerance = form.intolerance.data
         exclude = form.exclude.data
 
-        recipes = complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diet, cuisine, intolerance, exclude)
-
-
-        print (recipes)
-        return "Form submitted"
+        results = complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, cuisine, intolerance, exclude)
+        message = ''
+        if results['totalResults']==0:
+            message = "Sorry no results for that Search!"
+        return render_template("results.html", results=results, form = form, message = message)
 
     else:
         

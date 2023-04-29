@@ -148,7 +148,7 @@ def complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, 
     print (f"intoler: {intolerances}")
     # build request url from arguments:
 
-    url = "https://api.spoonacular.com/recipes/complexSearch?apiKey=3de123cdc6f14ce0a9bc46a5e5edeb2d" 
+    url = "https://api.spoonacular.com/recipes/complexSearch?apiKey=3de123cdc6f14ce0a9bc46a5e5edeb2d&number=100" 
     if diet:
         url += f"&diet={diet}"
     if intolerances:
@@ -163,9 +163,9 @@ def complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, 
        
     print (f"URL:{url}")
 
-    # resp = requests.get(f"https://api.spoonacular.com/recipes/complexSearch?apiKey=3de123cdc6f14ce0a9bc46a5e5edeb2d&query={query}&number=1&diet={diet}&cuisine={cuisine}&intolerances={intolerances}&excludeIngredients={exclude}") 
-    resp = requests.get(url)
-    response_dict = resp.json()
+    
+    response = requests.get(url)
+    response_dict = response.json()
     
     resp = response_dict
     formatted_recipes = {'results':[{'spoonacular_id' : recipe['id'], 'title': recipe['title'], 'image_url': recipe ['image']} for recipe in resp['results']], 'totalResults': resp['totalResults']}
