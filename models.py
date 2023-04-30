@@ -62,10 +62,10 @@ class Recipes(db.Model):
                          nullable = False)
     spoonacular_id = db.Column(db.Integer, unique = True,
                                nullable = False)
-    diets = db.Column(db.JSON)
+    diets = db.Column(db.PickleType)
     ready_in = db.Column(db.Integer)
     image_url = db.Column(db.String)
-    cuisine = db.Column(db.JSON)
+    cuisine = db.Column(db.PickleType)
     health_score = db.Column(db.Integer)
     steps = db.Column(db.Text)
     dairy_free = db.Column(db.Boolean)

@@ -60,5 +60,40 @@ def show_search_page():
     else:
         
         return render_template("search.html", form = form)
+    
+@app.route("/recipes/<spoonacular_id>")
+def show_recipe_details(spoonacular_id):
+    """ check if Recipe in DB and get data or get data from API and commit data to db"""
+   
+    if Recipes.query.filter_by(spoonacular_id = spoonacular_id).all():
+        recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
+        print("Recipe is in DB")
+        print(recipe)
+        return render_template("recipe_details.html", recipe=recipe)
+    else:
+        recipe = recipe_detail_search(spoonacular_id)
+        print("Recipe not in db")
+        new_recipe = Recipes(title = recipe['title'],
+                            spoonacular_id = recipe['spoonacular_id'],
+                            diets = recipe['diets'],
+                            ready_in = recipe['readyIn'],
+                            image_url = recipe['image_url'],
+                            cuisine = recipe['cuisines'],
+                            health_score = recipe['health_score'],
+                            steps = recipe['steps'],
+                            dairy_free = recipe['dairyFree'],
+                            gluten_free = recipe['glutenFree'],
+                            vegan = recipe['vegan'],
+                            vegetarian = recipe ['vegetarian'],
+                            servings = recipe['servings'],
+                            summary = recipe['summary'])
+    
+        db.session.add(new_recipe)
+        db.session.commit()
+        print("after recipe COMMMIT !!!!!!")
+        recipe = Recipes.query.filter_by(spoonacular_id=spoonacular_id).one()
+        return render_template("recipe_details.html", recipe=recipe)
+
+
 
 
