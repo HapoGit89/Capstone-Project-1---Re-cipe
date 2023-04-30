@@ -113,7 +113,7 @@ class Ingredients(db.Model):
         id = db.Column(db.Integer,
                    primary_key = True,
                    autoincrement = True)
-        name = db.Column(db.String(50), unique = True,
+        name = db.Column(db.String(50),
                          nullable = False)
         image = db.Column(db.Text)
         spoonacular_id = db.Column(db.Integer, unique = True,
@@ -178,13 +178,15 @@ class RecipeIngredients(db.Model):
             db.Integer,
             db.ForeignKey('ingredients.id', ondelete='cascade')
         )
-
+        amount = db.Column(db.Text)
+        
         recipe_id = db.Column(
             db.Integer,
             db.ForeignKey('recipes.id', ondelete='cascade'),
-            unique=True
         )
-        db.UniqueConstraint('recipe_id', 'ingredient_id')
+
+        
+        unique = db.UniqueConstraint('recipe_id', 'ingredient_id', name = "recipe_id_comb")
 
 
 

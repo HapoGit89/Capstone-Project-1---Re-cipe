@@ -164,10 +164,10 @@ def complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, 
     print (f"URL:{url}")
 
     
-    # response = requests.get(url)
-    # response_dict = response.json()
+    response = requests.get(url)
+    response_dict = response.json()
     
-    resp = response_hard_coded
+    resp = response_dict
     formatted_recipes = {'results':[{'spoonacular_id' : recipe['id'], 'title': recipe['title'], 'image_url': recipe ['image']} for recipe in resp['results']], 'totalResults': resp['totalResults']}
     return formatted_recipes
 

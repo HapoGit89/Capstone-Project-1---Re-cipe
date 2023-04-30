@@ -87,12 +87,42 @@ def show_recipe_details(spoonacular_id):
                             vegetarian = recipe ['vegetarian'],
                             servings = recipe['servings'],
                             summary = recipe['summary'])
-    
         db.session.add(new_recipe)
         db.session.commit()
-        print("after recipe COMMMIT !!!!!!")
-        recipe = Recipes.query.filter_by(spoonacular_id=spoonacular_id).one()
-        return render_template("recipe_details.html", recipe=recipe)
+        recipe_to_render = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
+
+        #------Check if all the recipes ingredients are in db if not add to Ingredient and RecipeIngredients table
+
+        for ingredient in recipe['ingredients']:
+            
+            if Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).all():
+                print ("ingredient in db")
+                ingr = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
+                new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
+                                                           ingredient_id = ingr.id,
+                                                             amount = ingredient['amount'])
+                db.session.add(new_recipe_ingredient)
+                db.session.commit()
+
+
+            else:
+                print ("ingredient not in db")
+                new_ingredient = Ingredients(name = ingredient['name'],
+                                            image = f"https://spoonacular.com/cdn/ingredients_100x100/{ingredient['image']}",
+                                            spoonacular_id = ingredient['spoonacular_ingredient_id'])
+                db.session.add(new_ingredient)
+                db.session.commit()
+
+                new_ingredient = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
+                new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
+                                                          ingredient_id = new_ingredient.id,
+                                                          amount = ingredient['amount'])
+                db.session.add(new_recipe_ingredient)
+                db.session.commit()
+            
+
+        recipe_to_render = Recipes.query.filter_by(spoonacular_id=spoonacular_id).one()
+        return render_template("recipe_details.html", recipe=recipe_to_render)
 
 
 
