@@ -98,8 +98,8 @@ def show_recipe_details(spoonacular_id):
 
         for ingredient in recipe['ingredients']:
             
-            if Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).all():
-                ingr = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
+            if Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).all():
+                ingr = Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).one()
                 new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
                                                            ingredient_id = ingr.id,
                                                              amount = ingredient['amount'])
@@ -125,7 +125,7 @@ def show_recipe_details(spoonacular_id):
         recipe_to_render = Recipes.query.filter_by(spoonacular_id=spoonacular_id).one()
         ingredients = [{'name': ingredient.name,
                         'image': ingredient.image,
-                        'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == recipe_to_render.id, RecipeIngredients.ingredient_id == ingredient.id).one().amount} for ingredient in recipe_to_render.ingredients]
+                        'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == recipe_to_render.id, RecipeIngredients.ingredient_id == ingredient.id).first().amount} for ingredient in recipe_to_render.ingredients]
         
         return render_template("recipe_details.html", recipe=recipe_to_render, ingredients=ingredients)
 

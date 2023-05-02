@@ -113,7 +113,7 @@ class Ingredients(db.Model):
         id = db.Column(db.Integer,
                    primary_key = True,
                    autoincrement = True)
-        name = db.Column(db.String(50),
+        name = db.Column(db.String,
                          nullable = False)
         image = db.Column(db.Text)
         spoonacular_id = db.Column(db.Integer, unique = True,

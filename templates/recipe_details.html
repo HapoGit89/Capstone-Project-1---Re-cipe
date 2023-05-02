@@ -1,35 +1,54 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container" style = "padding-top: 10%;">
-    <div class="row">
-      <div class="col-8">
-        <div class="jumbotron">
-            <h1 class="display-4">{{recipe.title}}</h1>
-            <p class="lead">{{recipe.summary| safe}}</p>
+<div class="container" style="padding-top: 10%;">
+  <div class="row">
+    <div class="col-8">
+      <div class="jumbotron">
+        <h1 class="display-4">{{recipe.title}}</h1>
+        <div class="lead">
+          {% if recipe.vegan == True %}
+          <p><i class="fa-regular fa-circle-check"></i> Vegan</p>
+          {% endif %}
+          {% if recipe.vegetarian == True %}
+          <p><i class="fa-regular fa-circle-check"></i> Veggie</p>
+          {% endif %}
+          {% if recipe.gluten_free == True %}
+          <p><i class="fa-regular fa-circle-check"></i> Gluten-Free</p>
+          {% endif %}
+          {% if recipe.dairy_free == True %}
+          <p><i class="fa-regular fa-circle-check"></i> Dairy-Free</p>
+          {% endif %}
+
+
+          <div>
             <hr class="my-4">
-            <h2 class = "dsplay-3">Ingredients:</h2>
-            <ul>
+            <h2 class="dsplay-3">Ingredients:</h2>
+
             {% for ingr in ingredients %}
-            <li>{{ingr['name']}} {{ingr['amount']}}</li>
+            <p><img src="{{ingr['image']}}" style="border-radius: 25%;" alt=""><b>{{ingr['name']}}</b>
+              {{ingr['amount']}}</p>
             {% endfor %}
-            </ul>
-            
+
+
             <hr class="my-4">
-            <h2 class = "dsplay-3">Preparation:</h2>
+            <h2 class="dsplay-3">Preparation:</h2>
             <p>{{recipe.steps| safe}}</p>
           </div>
+        </div>
       </div>
+    </div>
       <div class="col-4">
-        
-            <img src="{{recipe.image_url}}" class="object-fit-fill" alt="img show {{recipe.title}}">
-            <p class="lead">Rating:</p>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            <hr class="my-4">
-            
-          
+
+        <img src="{{recipe.image_url}}" class="object-fit-fill" alt="img show {{recipe.title}}">
+        <p class="lead">Rating:</p>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0"
+            aria-valuemax="100"></div>
+        </div>
+        <hr class="my-4">
+
+
       </div>
     </div>
   </div>
@@ -37,4 +56,4 @@
 
 
 
-{% endblock %}
+  {% endblock %}
