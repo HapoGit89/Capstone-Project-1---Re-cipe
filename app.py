@@ -68,8 +68,11 @@ def show_recipe_details(spoonacular_id):
     if Recipes.query.filter_by(spoonacular_id = spoonacular_id).all():
         recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
         print("Recipe is in DB")
-        print(recipe)
-        return render_template("recipe_details.html", recipe=recipe)
+        ingredients = [{'name': ingredient.name,
+                        'image': ingredient.image,
+                        'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == recipe.id, RecipeIngredients.ingredient_id == ingredient.id).one().amount} for ingredient in recipe.ingredients]
+        print(ingredients)
+        return render_template("recipe_details.html", recipe=recipe, ingredients = ingredients)
     else:
         recipe = recipe_detail_search(spoonacular_id)
         print("Recipe not in db")
@@ -96,7 +99,6 @@ def show_recipe_details(spoonacular_id):
         for ingredient in recipe['ingredients']:
             
             if Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).all():
-                print ("ingredient in db")
                 ingr = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
                 new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
                                                            ingredient_id = ingr.id,
@@ -106,7 +108,6 @@ def show_recipe_details(spoonacular_id):
 
 
             else:
-                print ("ingredient not in db")
                 new_ingredient = Ingredients(name = ingredient['name'],
                                             image = f"https://spoonacular.com/cdn/ingredients_100x100/{ingredient['image']}",
                                             spoonacular_id = ingredient['spoonacular_ingredient_id'])
@@ -122,8 +123,12 @@ def show_recipe_details(spoonacular_id):
             
 
         recipe_to_render = Recipes.query.filter_by(spoonacular_id=spoonacular_id).one()
-        return render_template("recipe_details.html", recipe=recipe_to_render)
+        ingredients = [{'name': ingredient.name,
+                        'image': ingredient.image,
+                        'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == recipe_to_render.id, RecipeIngredients.ingredient_id == ingredient.id).one().amount} for ingredient in recipe_to_render.ingredients]
+        
+        return render_template("recipe_details.html", recipe=recipe_to_render, ingredients=ingredients)
 
-
+# {{RecipeIngredients.query.filter(RecipeIngredients.recipe_id = recipe_to_render.id, RecipeIngredients.ingredient_id = ingredient.id ).amount}}
 
 

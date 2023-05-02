@@ -385,7 +385,6 @@ def recipe_detail_search(recipe_spoonacular_id):
     resp = requests.get(f"https://api.spoonacular.com/recipes/{recipe_spoonacular_id}/information?apiKey=3de123cdc6f14ce0a9bc46a5e5edeb2d")
     response_dict = resp.json()
 
-    print (response_dict)
     # response_dict = receipt_details_response_hard_coded
     ingredients = [{'spoonacular_ingredient_id': ingredient['id'], 'name': ingredient['name'], 'image': ingredient['image'], 'amount' : f"{ingredient['measures']['metric']['amount']} {ingredient['measures']['metric']['unitLong']}"} for ingredient in response_dict['extendedIngredients']]
     formatted_details = {'title': response_dict['title'], 'spoonacular_id': response_dict['id'], 'diets': response_dict['diets'], 'readyIn': response_dict['readyInMinutes'], 'image_url': response_dict['image'], 'cuisines': response_dict['cuisines'], 'health_score': response_dict['healthScore'], 'ingredients': ingredients, 'steps': response_dict['instructions'], 'summary': response_dict['summary'], 'vegan': response_dict['vegan'], 'vegetarian': response_dict['vegetarian'], 'servings': response_dict['servings'], 'glutenFree': response_dict['glutenFree'], 'dairyFree': response_dict['dairyFree'] }

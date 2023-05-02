@@ -55,7 +55,7 @@
         <div class="row">
             {% for recipe in results['results'] %}
             <div class="card col-md3" style="width: 18rem; margin: 1rem;">
-                <img src="{{recipe['image_url']}}" class="card-img-top" alt="img show {{recipe['title']}}">
+                <img src="{{recipe['image_url']}}" class="card-img-top object-fit-fill" alt="img show {{recipe['title']}}">
                 <p></p>
                 <div class="card-body">
                     <h5 class="card-title">{{recipe['title']}} </h5>

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container" style = "padding-top: 10%;">
+    <div class="row">
+      <div class="col-8">
+        <div class="jumbotron">
+            <h1 class="display-4">{{recipe.title}}</h1>
+            <p class="lead">{{recipe.summary| safe}}</p>
+            <hr class="my-4">
+            <h2 class = "dsplay-3">Ingredients:</h2>
+            <ul>
+            {% for ingr in ingredients %}
+            <li>{{ingr['name']}} {{ingr['amount']}}</li>
+            {% endfor %}
+            </ul>
+            
+            <hr class="my-4">
+            <h2 class = "dsplay-3">Preparation:</h2>
+            <p>{{recipe.steps| safe}}</p>
+          </div>
+      </div>
+      <div class="col-4">
+        
+            <img src="{{recipe.image_url}}" class="object-fit-fill" alt="img show {{recipe.title}}">
+            <p class="lead">Rating:</p>
+            <hr class="my-4">
+            
+          
+      </div>
+    </div>
+  </div>
+
+
+
+
+{% endblock %}
