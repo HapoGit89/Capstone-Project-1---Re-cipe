@@ -134,8 +134,10 @@ def complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, 
     """ Returns a python dict containing Spoonacular Compley Search Results for given arguments"""
     
     diet = ','.join(diets)    # join checkboxes with multiple choice fields for query
-    if veggie == True:
+    if veggie == True and len(diet)>0:
         diet += ',vegetarian'
+    elif veggie == True:
+        diet +='vegetarian'
     if vegan == True:
         diet += ',vegan'
     if gluten_free == True:
@@ -145,18 +147,17 @@ def complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, 
 
     intolerances = ','.join(intolerance) # join intolerances array into tuples
 
-    print (f"intoler: {intolerances}")
-    # build request url from arguments:
+   
 
     url = "https://api.spoonacular.com/recipes/complexSearch?apiKey=3de123cdc6f14ce0a9bc46a5e5edeb2d&number=100" 
-    if diet:
-        url += f"&diet={diet}"
-    if intolerances:
-        url += f"&intolerances={intolerances}"
     if query:
         url += f"&query={query}"
     if cuisine:
         url += f"&cuisine={cuisine}"
+    if diet:
+        url += f"&diet={diet}"
+    if intolerances:
+        url += f"&intolerances={intolerances}"
     if exclude:
         url += f"&excludeIngredients={exclude}"
 

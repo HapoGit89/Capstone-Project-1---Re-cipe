@@ -2,7 +2,7 @@
 from random import choices
 from flask_wtf import FlaskForm
 from wtforms import StringField, widgets, PasswordField, TextAreaField, BooleanField, SelectField, SelectMultipleField
-
+from wtforms.validators import DataRequired, Email, Length
 
 
 cuisines = [('', 'None'),('african', 'African'), ('american', 'American'), ('british', 'British'), ('cajun', 'Cajun'), ('carribean', 'Carribean'), ('chinese', 'Chinese'), ('eastern european', 'Eastern European'), ('european', 'European'), ('french', 'French'), ('german', 'German'), ('greek', 'Greek'), ('indian', 'Indian'), ('irish', 'Irish'),
@@ -26,4 +26,12 @@ class SearchForm(FlaskForm):
     cuisine = SelectField('Cuisine', choices = cuisines)
     intolerance = SelectField('Intolerance', choices = intolerances)
     exclude = StringField ('exclude (if multiple seperate by comma)')
+
+
+class UserSignUp(FlaskForm):
+    """Form for User Signup"""
+
+    username = StringField("Username:", validators=[DataRequired()])
+    email = StringField("Email:", validators=[DataRequired(), Email()])
+    password = PasswordField("Password:", validators=[Length(min=6)])
 

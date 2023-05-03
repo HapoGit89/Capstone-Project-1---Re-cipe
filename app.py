@@ -11,7 +11,8 @@ from sqlalchemy.exc import IntegrityError
 # from forms import UserAddForm, LoginForm, MessageForm, UserEditForm
 from models import db, connect_db, Users, Recipes, Ingredients, RecipeIngredients, Favourites
 from wrapper import complex_recipe_search, recipe_detail_search
-from forms import SearchForm
+from forms import SearchForm, UserSignUp
+
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
@@ -27,6 +28,34 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "SHHHHH Secret")
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
+
+
+@app.before_request
+def add_user_to_g():
+    """Check before every request if user is logged in. If logged in pass current user object to global flask"""
+
+    if CURR_USER_KEY in session:
+        g.user = Users.query.get(session[CURR_USER_KEY])
+
+    else:
+        g.user = None
+
+
+#------Log In and Log Out Funcs
+
+def do_login(user):
+    """Log in user."""
+
+    session[CURR_USER_KEY] = user.id
+
+def do_logout():
+    """Logout user."""
+
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
+
+#------------------------------
+
 
 
 with app.app_context():
@@ -129,6 +158,46 @@ def show_recipe_details(spoonacular_id):
         
         return render_template("recipe_details.html", recipe=recipe_to_render, ingredients=ingredients)
 
-# {{RecipeIngredients.query.filter(RecipeIngredients.recipe_id = recipe_to_render.id, RecipeIngredients.ingredient_id = ingredient.id ).amount}}
+@app.route("/users/signup", methods = ["POST", "GET"])
+def sign_up_user():
+    """Display User SignUp Form, check f username in database and sign up user"""
+    form = UserSignUp()
+
+    if form.validate_on_submit():
+        try:
+            username = form.username.data
+            password = form.password.data
+            email = form.email.data
+
+            user = Users.signup(username = username, password = password, email = email)
+            db.session.commit()
+            
+
+        except IntegrityError:
+            flash("Username already taken", 'danger')
+            return render_template('user_signup.html', form=form)
+
+        do_login(user)
+
+        return redirect("/")
+       
+        
+    return render_template("user_signup.html", form = form)
+
+@app.route("/users/logout")
+def log_out_user():
+        do_logout()
+        flash("You are now logged out.", "danger")
+        return redirect("/")
+
+@app.route("/users/login")
+def log_in_user():
+        
+        do_logout()
+        flash("You are now logged out.", "danger")
+        return redirect("/")
+
+
+
 
 

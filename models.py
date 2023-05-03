@@ -44,6 +44,36 @@ class Users(db.Model):
         secondary="ratings", viewonly = True,
         backref = 'rating_users'
     )
+
+    @classmethod
+    def signup(cls, username, email, password):
+        """Sign up user and add hashed password to DB """
+
+        hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        user = Users(
+            username=username,
+            email=email,
+            password=hashed_pwd,
+        )
+
+        db.session.add(user)
+        return user
+    
+    @classmethod
+    def authenticate(cls, username, password):
+        """Checks if user is in db and hashed password mathes password in DB"""
+
+        user = cls.query.filter_by(username=username).first()
+
+        if user:
+            is_auth = bcrypt.check_password_hash(user.password, password)
+            if is_auth:
+                return user
+
+        return False
+
+
     
 
 
