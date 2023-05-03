@@ -135,7 +135,7 @@ def show_recipe_details(spoonacular_id):
             
             if Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).all():
                 ingr = Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).one()
-                if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == ingr.id, RecipeIngredients.recipe_id == recipe['id']).all():
+                if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == ingr.id, RecipeIngredients.recipe_id == recipe_to_render.id).all():
                     new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
                                                             ingredient_id = ingr.id,
                                                                 amount = ingredient['amount'])
@@ -151,7 +151,7 @@ def show_recipe_details(spoonacular_id):
                 db.session.commit()
 
                 new_ingredient = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
-                if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == new_ingredient.id, RecipeIngredients.recipe_id == recipe['id']).all():
+                if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == new_ingredient.id, RecipeIngredients.recipe_id == recipe_to_render.id).all():
                     new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
                                                             ingredient_id = new_ingredient.id,
                                                             amount = ingredient['amount'])
@@ -201,6 +201,7 @@ def log_out_user():
 
 @app.route("/users/login", methods = ["POST", "GET"])
 def log_in_user():
+    """login route whch renders login form and authentificates login data"""
     form = UserLogin()
     if form.validate_on_submit():
         
@@ -221,6 +222,8 @@ def log_in_user():
                 return render_template('user_login.html', form=form)
 
     return render_template("user_login.html", form = form)
+
+# @app.route("/users/favourites")
 
 
 

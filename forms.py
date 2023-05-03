@@ -34,6 +34,7 @@ class UserSignUp(FlaskForm):
     username = StringField("Username:", validators=[DataRequired()])
     email = StringField("Email:", validators=[DataRequired(), Email()])
     password = PasswordField("Password:", validators=[Length(min=6)])
+    # confrm password
 
 class UserLogin(FlaskForm):
     """Form for User Login"""
