@@ -10,6 +10,7 @@ from sqlalchemy.exc import IntegrityError
 
 # from forms import UserAddForm, LoginForm, MessageForm, UserEditForm
 from models import db, connect_db, Users, Recipes, Ingredients, RecipeIngredients, Favourites
+from symbol import factor
 from wrapper import complex_recipe_search, recipe_detail_search
 from forms import SearchForm, UserSignUp, UserLogin
 
@@ -83,6 +84,11 @@ def show_search_page():
 
         results = complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, cuisine, intolerance, exclude)
         no_of_results = len(results['results'])
+        if g.user:
+            user = g.user
+            favourites = [favourite.spoonacular_id for favourite in user.favourite_recipes]
+            print (favourites)
+            return render_template("results.html", results=results, form = form, no_of_results=no_of_results, favourites = favourites)
       
         return render_template("results.html", results=results, form = form, no_of_results=no_of_results)
 
@@ -129,11 +135,12 @@ def show_recipe_details(spoonacular_id):
             
             if Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).all():
                 ingr = Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).one()
-                new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
-                                                           ingredient_id = ingr.id,
-                                                             amount = ingredient['amount'])
-                db.session.add(new_recipe_ingredient)
-                db.session.commit()
+                if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == ingr.id, RecipeIngredients.recipe_id == recipe['id']).all():
+                    new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
+                                                            ingredient_id = ingr.id,
+                                                                amount = ingredient['amount'])
+                    db.session.add(new_recipe_ingredient)
+                    db.session.commit()
 
 
             else:
@@ -144,11 +151,12 @@ def show_recipe_details(spoonacular_id):
                 db.session.commit()
 
                 new_ingredient = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
-                new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
-                                                          ingredient_id = new_ingredient.id,
-                                                          amount = ingredient['amount'])
-                db.session.add(new_recipe_ingredient)
-                db.session.commit()
+                if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == new_ingredient.id, RecipeIngredients.recipe_id == recipe['id']).all():
+                    new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
+                                                            ingredient_id = new_ingredient.id,
+                                                            amount = ingredient['amount'])
+                    db.session.add(new_recipe_ingredient)
+                    db.session.commit()
             
 
         recipe_to_render = Recipes.query.filter_by(spoonacular_id=spoonacular_id).one()

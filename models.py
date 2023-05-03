@@ -199,6 +199,8 @@ class RecipeIngredients(db.Model):
 
         __tablename__ = 'recipe_ingredients' 
 
+        __table_args__ = (db.UniqueConstraint('recipe_id', 'ingredient_id', name = "recipe_id_comb"),)
+
         id = db.Column(
             db.Integer,
             primary_key=True
@@ -216,7 +218,7 @@ class RecipeIngredients(db.Model):
         )
 
         
-        unique = db.UniqueConstraint('recipe_id', 'ingredient_id', name = "recipe_id_comb")
+        # unique = db.UniqueConstraint('recipe_id', 'ingredient_id', name = "recipe_id_comb")
 
 
 
