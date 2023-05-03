@@ -29,8 +29,16 @@
           </div>
           {% endif %}
         </div>
+      
             
       </nav>
+      {% for category, message in get_flashed_messages(with_categories=True) %}
+      <div class="row" style = "margin-top: 4%;">
+      <div class="col-2" ></div>
+      <div class="alert alert-{{ category }} col-8" >{{ message }}</div>
+      <div class="col-2" ></div>
+    </div>
+      {% endfor %}
     {% block content %}
 
     

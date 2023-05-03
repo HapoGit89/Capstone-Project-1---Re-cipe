@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 # from forms import UserAddForm, LoginForm, MessageForm, UserEditForm
 from models import db, connect_db, Users, Recipes, Ingredients, RecipeIngredients, Favourites
 from wrapper import complex_recipe_search, recipe_detail_search
-from forms import SearchForm, UserSignUp
+from forms import SearchForm, UserSignUp, UserLogin
 
 CURR_USER_KEY = "curr_user"
 
@@ -178,6 +178,7 @@ def sign_up_user():
             return render_template('user_signup.html', form=form)
 
         do_login(user)
+        flash(f"Welcome, {user.username}", "success")
 
         return redirect("/")
        
@@ -188,16 +189,30 @@ def sign_up_user():
 def log_out_user():
         do_logout()
         flash("You are now logged out.", "danger")
-        return redirect("/")
+        return redirect("/users/login")
 
-@app.route("/users/login")
+@app.route("/users/login", methods = ["POST", "GET"])
 def log_in_user():
+    form = UserLogin()
+    if form.validate_on_submit():
         
-        do_logout()
-        flash("You are now logged out.", "danger")
-        return redirect("/")
+            username = form.username.data
+            password = form.password.data
 
 
+            user = Users.authenticate(username = username, password = password)
+            if user:
+                do_login(user = user)
+                flash(f"Welcome back, {user.username}", 'success')
+                return redirect("/")
+
+            
+
+            else:
+                flash("Wrong username/password", 'danger')
+                return render_template('user_login.html', form=form)
+
+    return render_template("user_login.html", form = form)
 
 
 

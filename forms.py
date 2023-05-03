@@ -35,3 +35,9 @@ class UserSignUp(FlaskForm):
     email = StringField("Email:", validators=[DataRequired(), Email()])
     password = PasswordField("Password:", validators=[Length(min=6)])
 
+class UserLogin(FlaskForm):
+    """Form for User Login"""
+
+    username = StringField("Username:", validators=[DataRequired()])
+    password = PasswordField("Password:", validators=[Length(min=6)])
+
