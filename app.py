@@ -266,6 +266,34 @@ def add_recipe_to_favourites(spoonacular_id):
                             summary = recipe['summary'])
             db.session.add(new_recipe)
             db.session.commit()
+            
+            for ingredient in recipe['ingredients']:
+            
+                if Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).all():
+                    ingr = Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).one()
+                    if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == ingr.id, RecipeIngredients.recipe_id == new_recipe.id).all():
+                        new_recipe_ingredient = RecipeIngredients(recipe_id = new_recipe.id,
+                                                                ingredient_id = ingr.id,
+                                                                    amount = ingredient['amount'])
+                        db.session.add(new_recipe_ingredient)
+                        db.session.commit()
+
+
+                else:
+                    new_ingredient = Ingredients(name = ingredient['name'],
+                                                image = f"https://spoonacular.com/cdn/ingredients_100x100/{ingredient['image']}",
+                                                spoonacular_id = ingredient['spoonacular_ingredient_id'])
+                    db.session.add(new_ingredient)
+                    db.session.commit()
+
+                    new_ingredient = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
+                    
+                    new_recipe_ingredient = RecipeIngredients(recipe_id = new_recipe.id,
+                                                                ingredient_id = new_ingredient.id,
+                                                                amount = ingredient['amount'])
+                    db.session.add(new_recipe_ingredient)
+                    db.session.commit()
+            
             return f"recipe {{recipe.id}} added to favourites for user {{user.id}}" 
 
     else:
