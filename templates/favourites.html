@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container" style="margin-top: 10%;">
+       
+        <div class="row">
+            {% for recipe in favourites %}
+            <div class="card col-md3" style="width: 18rem; margin: 1rem;">
+                <img src="{{recipe.image_url}}" class="card-img-top object-fit-fill" alt="img show {{recipe.title}}">
+                <p></p>
+                <div class="card-body">
+                   {% if g.user %} 
+                            <i class="fa-solid fa-star fa-lg" id ="star-{{recipe.id}}"></i> 
+                   {% endif %} 
+                    <h5 class="card-title">{{recipe.title}} </h5>
+                    
+                    <a href="/recipes/{{recipe.spoonacular_id}}" class="btn btn-outline-secondary">See Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

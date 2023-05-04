@@ -175,8 +175,11 @@ def sign_up_user():
         try:
             username = form.username.data
             password = form.password.data
+            password_conf = form.password_conf.data
             email = form.email.data
-
+            if password != password_conf:
+                flash("Password confirmation not matching", 'danger')
+                return render_template('user_signup.html', form=form)
             user = Users.signup(username = username, password = password, email = email)
             db.session.commit()
             
@@ -223,7 +226,17 @@ def log_in_user():
 
     return render_template("user_login.html", form = form)
 
-# @app.route("/users/favourites")
+@app.route("/recipes/favourites")
+def show_favourites():
+    if g.user:
+        user = g.user
+        favourites = user.favourite_recipes
+        print(favourites)
+        return render_template("favourites.html", favourites = favourites)
+    else:
+        flash(f"You need to be logged in for that", 'danger')
+        return redirect("/")
+
 
 
 
