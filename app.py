@@ -87,7 +87,6 @@ def show_search_page():
         if g.user:
             user = g.user
             favourites = [favourite.spoonacular_id for favourite in user.favourite_recipes]
-            print (favourites)
             return render_template("results.html", results=results, form = form, no_of_results=no_of_results, favourites = favourites)
       
         return render_template("results.html", results=results, form = form, no_of_results=no_of_results)
@@ -99,15 +98,17 @@ def show_search_page():
 @app.route("/recipes/<spoonacular_id>")
 def show_recipe_details(spoonacular_id):
     """ check if Recipe in DB and get data or get data from API and commit data to db"""
-   
+    if g.user:   # can access page if not logged in but then favourites array is empty
+        user = g.user
+        favourites = user.render_favourites_spoonacular_ids()
+    else: favourites = []
+
     if Recipes.query.filter_by(spoonacular_id = spoonacular_id).all():
         recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
         print("Recipe is in DB")
-        ingredients = [{'name': ingredient.name,
-                        'image': ingredient.image,
-                        'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == recipe.id, RecipeIngredients.ingredient_id == ingredient.id).one().amount} for ingredient in recipe.ingredients]
-        print(ingredients)
-        return render_template("recipe_details.html", recipe=recipe, ingredients = ingredients)
+        ingredients = recipe.render_ingredients()
+        
+        return render_template("recipe_details.html", recipe=recipe, ingredients = ingredients, favourites = favourites)
     else:
         recipe = recipe_detail_search(spoonacular_id)
         print("Recipe not in db")
@@ -160,11 +161,11 @@ def show_recipe_details(spoonacular_id):
             
 
         recipe_to_render = Recipes.query.filter_by(spoonacular_id=spoonacular_id).one()
-        ingredients = [{'name': ingredient.name,
-                        'image': ingredient.image,
-                        'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == recipe_to_render.id, RecipeIngredients.ingredient_id == ingredient.id).first().amount} for ingredient in recipe_to_render.ingredients]
-        
-        return render_template("recipe_details.html", recipe=recipe_to_render, ingredients=ingredients)
+        # ingredients = [{'name': ingredient.name,
+        #                 'image': ingredient.image,
+        #                 'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == recipe_to_render.id, RecipeIngredients.ingredient_id == ingredient.id).first().amount} for ingredient in recipe_to_render.ingredients]
+        ingredients = recipe_to_render.render_ingredients()
+        return render_template("recipe_details.html", recipe=recipe_to_render, ingredients=ingredients, favourites=favourites)
 
 @app.route("/users/signup", methods = ["POST", "GET"])
 def sign_up_user():

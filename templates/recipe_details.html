@@ -5,6 +5,13 @@
   <div class="row">
     <div class="col-8">
       <div class="jumbotron">
+        {% if g.user %} 
+                        {% if recipe['spoonacular_id'] in favourites %}
+                            <i class="fa-solid fa-star fa-lg" id = "star" data-recipe="{{recipe['spoonacular_id']}}"></i> 
+                        {% else %}
+                            <i class="fa-regular fa-star fa-lg" id = "star" data-recipe="{{recipe['spoonacular_id']}}"></i>
+                        {% endif %}
+                   {% endif %} 
         <h1 class="display-4">{{recipe.title}}</h1>
         <div class="lead">
           {% if recipe.vegan == True %}

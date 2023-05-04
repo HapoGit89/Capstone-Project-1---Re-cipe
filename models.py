@@ -45,6 +45,10 @@ class Users(db.Model):
         backref = 'rating_users'
     )
 
+    def render_favourites_spoonacular_ids(self):
+         favourites = [favourite.spoonacular_id for favourite in self.favourite_recipes]
+         return favourites
+    
     @classmethod
     def signup(cls, username, email, password):
         """Sign up user and add hashed password to DB """
@@ -74,7 +78,7 @@ class Users(db.Model):
 
         return False
 
-
+    
     
 
 
@@ -119,7 +123,12 @@ class Recipes(db.Model):
         secondary="ratings",
         backref = 'recipes_rated'
     )
-
+    def render_ingredients(self):
+        ingredients = [{'name': ingredient.name,
+                        'image': ingredient.image,
+                        'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == self.id, RecipeIngredients.ingredient_id == ingredient.id).one().amount} for ingredient in self.ingredients]
+        return ingredients
+    
     @classmethod
     def is_recipe_in_db(cls,recipe_id):
         recipes_in_db_id = [recipe.spoonacular_id for recipe in cls.query.all()]
@@ -161,6 +170,9 @@ class Favourites(db.Model):
         """Favourites Table"""
 
         __tablename__ = "favourites"
+
+        __table_args__ = (db.UniqueConstraint('recipe_id', 'user_id', name = "favourite_comb"),)
+
 
         def __repr__(self):
             return f"Favourite id:{self.id} for user {self.user_id} and recipe {self.recipe_id}"
