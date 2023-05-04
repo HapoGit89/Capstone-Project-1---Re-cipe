@@ -9,7 +9,7 @@
                 <p></p>
                 <div class="card-body">
                    {% if g.user %} 
-                            <i class="fa-solid fa-star fa-lg" id ="star-{{recipe.id}}"></i> 
+                            <i class="fa-solid fa-star fa-lg" id ="star" data-recipe="{{recipe.spoonacular_id}}"></i> 
                    {% endif %} 
                     <h5 class="card-title">{{recipe.title}} </h5>
                     

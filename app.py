@@ -237,6 +237,61 @@ def show_favourites():
         flash(f"You need to be logged in for that", 'danger')
         return redirect("/")
 
+@app.route("/recipes/favourites/<spoonacular_id>/add", methods = ["POST"])
+def add_recipe_to_favourites(spoonacular_id):
+    if g.user:
+        user = g.user
+        if Recipes.query.filter_by(spoonacular_id = spoonacular_id).all():
+             recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
+             new_favourite = Favourites(user_id = user.id, recipe_id = recipe.id)
+             db.session.add(new_favourite)
+             db.session.commit()
+             return f"recipe {{recipe.id}} added to favourites for user {{user.id}}"
+        else:
+            recipe = recipe_detail_search(spoonacular_id)
+            
+            new_recipe = Recipes(title = recipe['title'],
+                            spoonacular_id = recipe['spoonacular_id'],
+                            diets = recipe['diets'],
+                            ready_in = recipe['readyIn'],
+                            image_url = recipe['image_url'],
+                            cuisine = recipe['cuisines'],
+                            health_score = recipe['health_score'],
+                            steps = recipe['steps'],
+                            dairy_free = recipe['dairyFree'],
+                            gluten_free = recipe['glutenFree'],
+                            vegan = recipe['vegan'],
+                            vegetarian = recipe ['vegetarian'],
+                            servings = recipe['servings'],
+                            summary = recipe['summary'])
+            db.session.add(new_recipe)
+            db.session.commit()
+            return f"recipe {{recipe.id}} added to favourites for user {{user.id}}" 
+
+    else:
+        
+        flash(f"You need to be logged in for that", 'danger')
+        return redirect("/")
+    
+
+@app.route("/recipes/favourites/<spoonacular_id>/remove", methods = ["POST"])
+def delete_recipe_from_favourites(spoonacular_id):
+    if g.user:
+        user = g.user
+        recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
+        favourite = Favourites.query.filter(Favourites.recipe_id==recipe.id, Favourites.user_id==user.id).one()
+        db.session.delete(favourite)
+        db.session.commit()
+        return f"recipe {{recipe.id}} removed from favourites for user {{user.id}}"
+       
+
+    else:
+        
+        flash(f"You need to be logged in for that", 'danger')
+        return redirect("/")
+
+
+
 
 
 
