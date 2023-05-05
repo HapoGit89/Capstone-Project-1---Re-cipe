@@ -136,6 +136,26 @@ class Recipes(db.Model):
              return True
         else:
              return False
+    
+    @classmethod
+    def add_new_recipe(cls, recipe):
+        new_recipe = cls(title = recipe['title'],
+                            spoonacular_id = recipe['spoonacular_id'],
+                            diets = recipe['diets'],
+                            ready_in = recipe['readyIn'],
+                            image_url = recipe['image_url'],
+                            cuisine = recipe['cuisines'],
+                            health_score = recipe['health_score'],
+                            steps = recipe['steps'],
+                            dairy_free = recipe['dairyFree'],
+                            gluten_free = recipe['glutenFree'],
+                            vegan = recipe['vegan'],
+                            vegetarian = recipe ['vegetarian'],
+                            servings = recipe['servings'],
+                            summary = recipe['summary'])
+        db.session.add(new_recipe)
+        return new_recipe
+         
          
 
 

@@ -86,7 +86,7 @@ def show_search_page():
         no_of_results = len(results['results'])
         if g.user:
             user = g.user
-            favourites = [favourite.spoonacular_id for favourite in user.favourite_recipes]
+            favourites = user.render_favourites_spoonacular_ids()
             return render_template("results.html", results=results, form = form, no_of_results=no_of_results, favourites = favourites)
       
         return render_template("results.html", results=results, form = form, no_of_results=no_of_results)
@@ -112,21 +112,7 @@ def show_recipe_details(spoonacular_id):
     else:
         recipe = recipe_detail_search(spoonacular_id)
         print("Recipe not in db")
-        new_recipe = Recipes(title = recipe['title'],
-                            spoonacular_id = recipe['spoonacular_id'],
-                            diets = recipe['diets'],
-                            ready_in = recipe['readyIn'],
-                            image_url = recipe['image_url'],
-                            cuisine = recipe['cuisines'],
-                            health_score = recipe['health_score'],
-                            steps = recipe['steps'],
-                            dairy_free = recipe['dairyFree'],
-                            gluten_free = recipe['glutenFree'],
-                            vegan = recipe['vegan'],
-                            vegetarian = recipe ['vegetarian'],
-                            servings = recipe['servings'],
-                            summary = recipe['summary'])
-        db.session.add(new_recipe)
+        Recipes.add_new_recipe(recipe)
         db.session.commit()
         recipe_to_render = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
 
