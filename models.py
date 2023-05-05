@@ -261,9 +261,12 @@ class RecipeIngredients(db.Model):
             db.ForeignKey('recipes.id', ondelete='cascade'),
         )
 
-        
-        # unique = db.UniqueConstraint('recipe_id', 'ingredient_id', name = "recipe_id_comb")
-
+        @classmethod
+        def is_recipe_ingredient_in_db(cls, recipe, ingredient):
+            if cls.query.filter(cls.ingredient_id == ingredient.id, cls.recipe_id == recipe.id).all():
+                return True
+            else:
+                 return False
 
 
 

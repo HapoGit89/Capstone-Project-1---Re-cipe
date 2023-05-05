@@ -120,15 +120,13 @@ def show_recipe_details(spoonacular_id):
         for ingredient in recipe['ingredients']:
             
             if Ingredients.is_ingredient_in_db(ingredient['spoonacular_ingredient_id']):
-            # if Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).all():
                 ingr = Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).one()
-                if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == ingr.id, RecipeIngredients.recipe_id == recipe_to_render.id).all():
+                if not RecipeIngredients.is_recipe_ingredient_in_db(recipe=recipe_to_render, ingredient=ingr):
                     new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
                                                             ingredient_id = ingr.id,
                                                                 amount = ingredient['amount'])
                     db.session.add(new_recipe_ingredient)
                     db.session.commit()
-
 
             else:
                 new_ingredient = Ingredients(name = ingredient['name'],
@@ -138,7 +136,7 @@ def show_recipe_details(spoonacular_id):
                 db.session.commit()
 
                 new_ingredient = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
-                if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == new_ingredient.id, RecipeIngredients.recipe_id == recipe_to_render.id).all():
+                if not RecipeIngredients.is_recipe_ingredient_in_db(recipe=recipe_to_render, ingredient=new_ingredient):
                     new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
                                                             ingredient_id = new_ingredient.id,
                                                             amount = ingredient['amount'])
@@ -201,8 +199,6 @@ def log_in_user():
                 do_login(user = user)
                 flash(f"Welcome back, {user.username}", 'success')
                 return redirect("/")
-
-            
 
             else:
                 flash("Wrong username/password", 'danger')
