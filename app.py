@@ -103,11 +103,10 @@ def show_recipe_details(spoonacular_id):
         favourites = user.render_favourites_spoonacular_ids()
     else: favourites = []
 
-    if Recipes.query.filter_by(spoonacular_id = spoonacular_id).all():
+    if Recipes.is_recipe_in_db(spoonacular_id):
         recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
         print("Recipe is in DB")
         ingredients = recipe.render_ingredients()
-        
         return render_template("recipe_details.html", recipe=recipe, ingredients = ingredients, favourites = favourites)
     else:
         recipe = recipe_detail_search(spoonacular_id)
@@ -120,7 +119,8 @@ def show_recipe_details(spoonacular_id):
 
         for ingredient in recipe['ingredients']:
             
-            if Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).all():
+            if Ingredients.is_ingredient_in_db(ingredient['spoonacular_ingredient_id']):
+            # if Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).all():
                 ingr = Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).one()
                 if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == ingr.id, RecipeIngredients.recipe_id == recipe_to_render.id).all():
                     new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
@@ -147,9 +147,6 @@ def show_recipe_details(spoonacular_id):
             
 
         recipe_to_render = Recipes.query.filter_by(spoonacular_id=spoonacular_id).one()
-        # ingredients = [{'name': ingredient.name,
-        #                 'image': ingredient.image,
-        #                 'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == recipe_to_render.id, RecipeIngredients.ingredient_id == ingredient.id).first().amount} for ingredient in recipe_to_render.ingredients]
         ingredients = recipe_to_render.render_ingredients()
         return render_template("recipe_details.html", recipe=recipe_to_render, ingredients=ingredients, favourites=favourites)
 

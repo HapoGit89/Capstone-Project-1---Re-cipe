@@ -130,15 +130,16 @@ class Recipes(db.Model):
         return ingredients
     
     @classmethod
-    def is_recipe_in_db(cls,recipe_id):
-        recipes_in_db_id = [recipe.spoonacular_id for recipe in cls.query.all()]
-        if recipe_id in recipes_in_db_id:
+    def is_recipe_in_db(cls,recipe_spoonacular_id):
+        """checks if recipe with spoonacular id is already in db"""
+        if cls.query.filter(cls.spoonacular_id == recipe_spoonacular_id).all():
              return True
         else:
              return False
     
     @classmethod
     def add_new_recipe(cls, recipe):
+        """adds new recipe in db, 'recipe' argument has API format (!=recipe object)"""
         new_recipe = cls(title = recipe['title'],
                             spoonacular_id = recipe['spoonacular_id'],
                             diets = recipe['diets'],
@@ -182,6 +183,16 @@ class Ingredients(db.Model):
         "Recipes",
         secondary="recipe_ingredients", viewonly = True,
         backref = 'used_ingredients')
+
+        @classmethod
+        def is_ingredient_in_db(cls, ingredient_spoonacular_id):
+             if cls.query.filter(cls.spoonacular_id == ingredient_spoonacular_id).all():
+                return True
+             else:
+                  return False
+
+    
+             
 
         
 
