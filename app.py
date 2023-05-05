@@ -137,10 +137,7 @@ def show_recipe_details(spoonacular_id):
 
                 new_ingredient = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
                 if not RecipeIngredients.is_recipe_ingredient_in_db(recipe=recipe_to_render, ingredient=new_ingredient):
-                    new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
-                                                            ingredient_id = new_ingredient.id,
-                                                            amount = ingredient['amount'])
-                    db.session.add(new_recipe_ingredient)
+                    RecipeIngredients.add_new_recipe_ingredient(recipe = recipe_to_render, ingredient=new_ingredient, amount = ingredient['amount'])                                  
                     db.session.commit()
             
 

@@ -267,6 +267,15 @@ class RecipeIngredients(db.Model):
                 return True
             else:
                  return False
+        
+        @classmethod
+        def add_new_recipe_ingredient(cls, recipe, ingredient, amount):
+            new_recipe_ingredient = RecipeIngredients(recipe_id = recipe.id,
+                                                            ingredient_id = ingredient.id,
+                                                            amount = amount)
+            db.session.add(new_recipe_ingredient)
+            return new_recipe_ingredient
+             
 
 
 
