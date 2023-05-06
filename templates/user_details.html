@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container" style = "padding-top: 20%;">
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-7 col-lg-5">
+          <h2 class="join-message">Edit profile for <b>{{user.username}}</b></h2>
+          <form method="POST" id="user_form">
+            {{ form.hidden_tag() }}
+      
+            {{ form.email.label}}
+            {{ form.email (value=user.email, class="form-control")}}
+            <span class="text-danger">{{form.email.error }}</span>
+            {{ form.new_password.label}}
+            {{ form.new_password (class="form-control")}}
+            <span class="text-danger">{{ form.new_password.error }}</span>
+            {{ form.password_conf.label}}
+            {{ form.password_conf (class="form-control")}}
+            <span class="text-danger">{{ form.password_conf.error }}</span>
+      
+           
+            <button class="btn btn-primary btn-lg btn-block">Save</button>
+          </form>
+          <a class="btn btn-danger btn-lg btn-block" style="margin-top: 6%;" href="/users/delete">Delete User</a>
+        </div>
+      </div>
+
+</div>
+
+{% endblock %}

@@ -43,3 +43,11 @@ class UserLogin(FlaskForm):
     username = StringField("Username:", validators=[DataRequired()])
     password = PasswordField("Password:", validators=[Length(min=6)])
 
+class UserEdit(FlaskForm):
+    """Form for editing User details (Email and password)"""
+
+    email = StringField("Email:", validators=[DataRequired(), Email()])
+    new_password = PasswordField("New Password(Leave empty if no change):")
+    password_conf = PasswordField("Old Password confirmation:")
+    
+

@@ -49,6 +49,13 @@ class Users(db.Model):
          favourites = [favourite.spoonacular_id for favourite in self.favourite_recipes]
          return favourites
     
+    def edit_user(self, password, email):
+         self.email = email
+         if len(password)>0:
+            self.password = bcrypt.generate_password_hash(password).decode('UTF-8')
+         db.session.add(self)
+         return self
+    
     @classmethod
     def signup(cls, username, email, password):
         """Sign up user and add hashed password to DB """
@@ -64,6 +71,7 @@ class Users(db.Model):
 
         db.session.add(user)
         return user
+    
     
     @classmethod
     def authenticate(cls, username, password):

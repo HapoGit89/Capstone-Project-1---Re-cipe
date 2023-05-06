@@ -3,6 +3,7 @@ import os
 from re import I
 from telnetlib import SE
 from this import d
+from urllib.parse import uses_relative
 
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
@@ -12,7 +13,7 @@ from sqlalchemy.exc import IntegrityError
 from models import db, connect_db, Users, Recipes, Ingredients, RecipeIngredients, Favourites
 from symbol import factor
 from wrapper import complex_recipe_search, recipe_detail_search
-from forms import SearchForm, UserSignUp, UserLogin
+from forms import SearchForm, UserEdit, UserSignUp, UserLogin
 
 CURR_USER_KEY = "curr_user"
 
@@ -123,9 +124,6 @@ def show_recipe_details(spoonacular_id):
                 ingr = Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).one()
                 if not RecipeIngredients.is_recipe_ingredient_in_db(recipe=recipe_to_render, ingredient=ingr):
                     RecipeIngredients.add_new_recipe_ingredient(recipe = recipe_to_render, ingredient=ingr, amount = ingredient['amount'])                                  
-                    # new_recipe_ingredient = RecipeIngredients(recipe_id = recipe_to_render.id,
-                    #                                         ingredient_id = ingr.id,
-                    #                                             amount = ingredient['amount'])
                     db.session.commit()
 
             else:
@@ -138,8 +136,7 @@ def show_recipe_details(spoonacular_id):
                 new_ingredient = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
                 if not RecipeIngredients.is_recipe_ingredient_in_db(recipe=recipe_to_render, ingredient=new_ingredient):
                     RecipeIngredients.add_new_recipe_ingredient(recipe = recipe_to_render, ingredient=new_ingredient, amount = ingredient['amount'])                                  
-                    db.session.commit()
-            
+                    db.session.commit() 
 
         recipe_to_render = Recipes.query.filter_by(spoonacular_id=spoonacular_id).one()
         ingredients = recipe_to_render.render_ingredients()
@@ -296,7 +293,41 @@ def delete_recipe_from_favourites(spoonacular_id):
         return redirect("/")
 
 
+@app.route("/users/delete", methods =["GET", "POST"])
+def delete_user():
+    if g.user:
+        user = g.user
+        db.session.delete(user)
+        db.session.commit()
+        flash(f"Deleted user {user.username}", 'danger')
+        return redirect("/")
+    else:
+        flash(f"You need to be logged in for that", 'danger')
+        return redirect("/")
 
+
+@app.route("/users/edit", methods =["GET", "POST"])
+def edit_user():
+    if g.user:
+        user = g.user
+        form = UserEdit()
+
+        if form.validate_on_submit():
+            if Users.authenticate(username = user.username, password = form.password_conf.data):
+                user.edit_user(password = form.new_password.data, email= form.email.data )
+                db.session.commit()
+                flash(f"User:{user.username} - Data changed", 'success')
+                return redirect('/')
+            else:
+                flash("Wrong password confirmation", 'danger')
+                return render_template('user_details.html', form=form, user = user)
+        
+            
+        
+        return render_template("user_details.html", user = user, form = form)
+    else:
+        flash(f"You need to be logged in for that", 'danger')
+        return redirect("/")
 
 
 
