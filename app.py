@@ -174,6 +174,7 @@ def sign_up_user():
 
 @app.route("/users/logout")
 def log_out_user():
+        """log out user"""
         do_logout()
         flash("You are now logged out.", "danger")
         return redirect("/users/login")
@@ -183,12 +184,8 @@ def log_in_user():
     """login route whch renders login form and authentificates login data"""
     form = UserLogin()
     if form.validate_on_submit():
-        
-            username = form.username.data
-            password = form.password.data
 
-
-            user = Users.authenticate(username = username, password = password)
+            user = Users.authenticate(username = form.username.data, password = form.password.data)
             if user:
                 do_login(user = user)
                 flash(f"Welcome back, {user.username}", 'success')
