@@ -145,7 +145,7 @@ def complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, 
     if dairy_free == True:
         diet += ',dairy%20free'
 
-    intolerances = ','.join(intolerance) # join intolerances array into tuples
+    
 
    
 
@@ -156,8 +156,8 @@ def complex_recipe_search(query, veggie, vegan, gluten_free, dairy_free, diets, 
         url += f"&cuisine={cuisine}"
     if diet:
         url += f"&diet={diet}"
-    if intolerances:
-        url += f"&intolerances={intolerances}"
+    if intolerance:
+        url += f"&intolerances={intolerance}"
     if exclude:
         url += f"&excludeIngredients={exclude}"
 
