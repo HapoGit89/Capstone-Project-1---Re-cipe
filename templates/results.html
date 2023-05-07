@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
+<div class="container md12">
     <form class="bg-light" id="recipe-search" method="POST"
         style="margin-top: 10%; border-style: solid; border-radius: 1%; border-width: 2px; border-color: grey; padding: 3%;">
         {{ form.hidden_tag() }}
@@ -51,11 +51,11 @@
         <button type="submit" class="btn" style="background-color: rgb(191, 226, 168);">Search Re:Cipe</button>
 </div>
 </form>
-<div class="container">
+<div class="container" id = "results" style="margin-bottom: 5%;">
     <h3>Results shown: {{no_of_results}}</h1>
         <div class="row">
             {% for recipe in results['results'] %}
-            <div class="card col-md3" style="width: 18rem; margin: 1rem;">
+            <div class="card col-md4" style="width: 18rem; margin: 1rem;">
                 <img src="{{recipe['image_url']}}" class="card-img-top object-fit-fill"
                     alt="img show {{recipe['title']}}">
                 <p></p>
@@ -79,6 +79,6 @@
 </div>
 
 
-</div>
+
 
 {% endblock %}

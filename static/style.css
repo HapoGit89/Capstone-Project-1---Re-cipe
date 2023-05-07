@@ -1,8 +1,13 @@
 body {
 
     background-image: url('https://images.unsplash.com/photo-1628006203055-b4aa5f6300f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80');
-
-
+    background-repeat: no-repeat; 
+    background-size: cover;
+    background-attachment: fixed;
+    height: 100%;
+   
+  
+      
 }
 
 #recipe-search {
@@ -10,4 +15,33 @@ body {
     border-color: black;
     border-radius: 2%;
     background-color: grey ;
+}
+
+.alert{
+    margin-top: 2%;
+    margin-left: 20%;
+    margin-right: 20%;
+    position: absolute;
+}
+.disclaimer {
+    position: fixed;
+    left: 50%;
+    bottom: 0px;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
+  }
+
+/* html {
+    height:100%
+  } */
+
+footer {
+    position:fixed;
+    bottom: 0;
+    margin: 4% 2% 0 2%;
+    color: beige;
+}
+
+#results {
+    margin-bottom: 5%;
 }
