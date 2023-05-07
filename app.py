@@ -106,12 +106,10 @@ def show_recipe_details(spoonacular_id):
 
     if Recipes.is_recipe_in_db(spoonacular_id):
         recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
-        print("Recipe is in DB")
         ingredients = recipe.render_ingredients()
         return render_template("recipe_details.html", recipe=recipe, ingredients = ingredients, favourites = favourites)
     else:
         recipe = recipe_detail_search(spoonacular_id)
-        print("Recipe not in db")
         Recipes.add_new_recipe(recipe)
         db.session.commit()
         recipe_to_render = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
@@ -202,7 +200,6 @@ def show_favourites():
     if g.user:
         user = g.user
         favourites = user.favourite_recipes
-        print(favourites)
         return render_template("favourites.html", favourites = favourites)
     else:
         flash(f"You need to be logged in for that", 'danger')
