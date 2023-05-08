@@ -5,12 +5,13 @@ from telnetlib import SE
 from this import d
 from urllib.parse import uses_relative
 
-from flask import Flask, render_template, request, flash, redirect, session, g
+import json
+from flask import Flask, render_template, request, flash, redirect, session, g, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 # from forms import UserAddForm, LoginForm, MessageForm, UserEditForm
-from models import db, connect_db, Users, Recipes, Ingredients, RecipeIngredients, Favourites
+from models import db, connect_db, Users, Recipes, Ingredients, RecipeIngredients, Favourites, Ratings
 from symbol import factor
 from wrapper import complex_recipe_search, recipe_detail_search
 from forms import SearchForm, UserEdit, UserSignUp, UserLogin
@@ -274,6 +275,28 @@ def edit_user():
     else:
         flash(f"You need to be logged in for that", 'danger')
         return redirect("/")
+
+@app.route("/recipes/favourites/rating", methods =["POST"])
+def rate_recipe():
+    if g.user:
+        user = g.user
+        rating = int(request.json["rating"])
+        recipe_id = int(request.json["recipe_id"])
+        if Ratings.query.filter(Ratings.recipe_id==recipe_id, Ratings.user_id==user.id).all():
+            edit_rating = Ratings.query.filter(Ratings.recipe_id==recipe_id, Ratings.user_id==user.id).one()
+            edit_rating.rating = rating
+            db.session.add(edit_rating)
+            db.session.commit()
+            return jsonify(edit_rating.serialize_rating(), 200)
+        else:
+            new_rating = Ratings(user_id=user.id, recipe_id = recipe_id, rating = rating)
+            db.session.add(new_rating)
+            db.session.commit()
+            return jsonify(new_rating.serialize_rating(), 200)
+    else:
+        flash(f"You need to be logged in for that", 'danger')
+        return redirect("/")
+
 
 
 

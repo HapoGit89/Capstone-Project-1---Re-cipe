@@ -13,6 +13,8 @@
                    {% endif %} 
                     <h5 class="card-title">{{recipe.title}} </h5>
                     
+                   
+                    <div style="margin-bottom: 6% ;"> My Rating: <i class="fa-regular fa-heart" id ="rating-heart" data-number="1" data-recipe="{{recipe.id}}"></i><i class="fa-regular fa-heart" id ="rating-heart" data-recipe="{{recipe.id}}" data-number="2"></i><i class="fa-regular fa-heart" id ="rating-heart" data-recipe="{{recipe.id}}" data-number="3"></i><i class="fa-regular fa-heart" id ="rating-heart" data-recipe="{{recipe.id}}" data-number="4"></i><i class="fa-regular fa-heart" id ="rating-heart" data-recipe="{{recipe.id}}" data-number="5"></i></div>
                     <a href="/recipes/{{recipe.spoonacular_id}}" class="btn btn-outline-secondary">See Details</a>
                 </div>
             </div>

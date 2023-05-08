@@ -259,7 +259,17 @@ class Ratings(db.Model):
                 db.ForeignKey('users.id', ondelete='cascade'))
         recipe_id = db.Column(db.Integer,
                     db.ForeignKey('recipes.id', ondelete='cascade'))
-        db.UniqueConstraint('user_id', 'recipe_id')
+        
+        def serialize_rating(self):
+             """Serialize Object Instance for JSON API response"""
+             rating = {'id': self.id,
+                       'rating': self.rating,
+                       'user_id': self.user_id,
+                       'recipe_id': self.recipe_id
+                       }
+             return rating
+
+
 
 class RecipeIngredients(db.Model):
         """Ingredients used in Recipes"""
