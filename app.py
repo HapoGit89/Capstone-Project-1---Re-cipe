@@ -107,7 +107,8 @@ def show_recipe_details(spoonacular_id):
     if Recipes.is_recipe_in_db(spoonacular_id):
         recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
         ingredients = recipe.render_ingredients()
-        return render_template("recipe_details.html", recipe=recipe, ingredients = ingredients, favourites = favourites)
+        rating = recipe.get_avg_rating()
+        return render_template("recipe_details.html", recipe=recipe, ingredients = ingredients, favourites = favourites, rating = rating)
     else:
         recipe = recipe_detail_search(spoonacular_id)
         Recipes.add_new_recipe(recipe)

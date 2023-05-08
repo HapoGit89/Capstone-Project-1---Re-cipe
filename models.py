@@ -142,7 +142,10 @@ class Recipes(db.Model):
         ratings_sum= 0
         for rating in ratings:
               ratings_sum += rating
-        rating_avg = ratings_sum/len(ratings)
+        if len(ratings)!=0:
+            rating_avg = f"{ratings_sum/len(ratings)}/5"
+        else:
+             rating_avg = "N/A"
         return rating_avg
         
          

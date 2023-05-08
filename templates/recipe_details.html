@@ -48,6 +48,16 @@
       <div class="col-4">
 
         <img src="{{recipe.image_url}}" class="object-fit-fill" alt="img show {{recipe.title}}">
+        <h2>Ø User Rating: 
+        <b>
+          {%if rating%}
+          {{rating}}
+          {% else %}
+          N/A
+          {% endif %}
+        </b>
+      
+        </h2>
       
         </div>
         <hr class="my-4">
