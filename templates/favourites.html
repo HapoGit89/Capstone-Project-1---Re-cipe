@@ -13,8 +13,9 @@
                    {% endif %} 
                     <h5 class="card-title">{{recipe.title}} </h5>
                     
-                    <div style = "margin-bottom: 6%; margin-top: -2%;"> <span>Your Rating:</span>
+                    <div style = "margin-bottom: 6%; margin-top: -2%;"> 
                         {% if not ratings.get(recipe.id) %}
+                        <span>Please Rate:</span>
                         <i class="fa-regular fa-heart" id ="rating-heart 1" data-number="1" data-recipe="{{recipe.id}}"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 2" data-recipe="{{recipe.id}}" data-number="2"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 3" data-recipe="{{recipe.id}}" data-number="3"></i>
@@ -23,42 +24,49 @@
                         
                        
                         {% elif ratings.get(recipe.id) > 4 %}
+                        <span>Your Rating:</span>
                         <i class="fa-solid fa-heart" id ="rating-heart 1" data-number="1" data-recipe="{{recipe.id}}"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 2" data-recipe="{{recipe.id}}" data-number="2"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 3" data-recipe="{{recipe.id}}" data-number="3"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 4" data-recipe="{{recipe.id}}" data-number="4"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 5" data-recipe="{{recipe.id}}" data-number="5"></i>
                         {% elif ratings.get(recipe.id) > 3 %}
+                        <span>Your Rating:</span>
                         <i class="fa-solid fa-heart" id ="rating-heart 1" data-number="1" data-recipe="{{recipe.id}}"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 2" data-recipe="{{recipe.id}}" data-number="2"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 3" data-recipe="{{recipe.id}}" data-number="3"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 4" data-recipe="{{recipe.id}}" data-number="4"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 5" data-recipe="{{recipe.id}}" data-number="5"></i>
                         {% elif ratings.get(recipe.id) > 2 %}
+                        <span>Your Rating:</span>
                         <i class="fa-solid fa-heart" id ="rating-heart 1" data-number="1" data-recipe="{{recipe.id}}"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 2" data-recipe="{{recipe.id}}" data-number="2"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 3" data-recipe="{{recipe.id}}" data-number="3"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 4" data-recipe="{{recipe.id}}" data-number="4"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 5" data-recipe="{{recipe.id}}" data-number="5"></i>
                         {% elif ratings.get(recipe.id) > 1 %}
+                        <span>Your Rating:</span>
                         <i class="fa-solid fa-heart" id ="rating-heart 1" data-number="1" data-recipe="{{recipe.id}}"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 2" data-recipe="{{recipe.id}}" data-number="2"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 3" data-recipe="{{recipe.id}}" data-number="3"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 4" data-recipe="{{recipe.id}}" data-number="4"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 5" data-recipe="{{recipe.id}}" data-number="5"></i>
                         {% elif ratings.get(recipe.id) > 1 %}
+                        <span>Your Rating:</span>
                         <i class="fa-solid fa-heart" id ="rating-heart 1" data-number="1" data-recipe="{{recipe.id}}"></i>
                         <i class="fa-solid fa-heart" id ="rating-heart 2" data-recipe="{{recipe.id}}" data-number="2"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 3" data-recipe="{{recipe.id}}" data-number="3"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 4" data-recipe="{{recipe.id}}" data-number="4"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 5" data-recipe="{{recipe.id}}" data-number="5"></i>
                         {% elif ratings.get(recipe.id) >0 %}
+                        <span>Your Rating:</span>
                         <i class="fa-solid fa-heart" id ="rating-heart 1" data-number="1" data-recipe="{{recipe.id}}"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 2" data-recipe="{{recipe.id}}" data-number="2"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 3" data-recipe="{{recipe.id}}" data-number="3"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 4" data-recipe="{{recipe.id}}" data-number="4"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 5" data-recipe="{{recipe.id}}" data-number="5"></i>
                         {% else %}
+                        <span>Your Rating:</span>
                         <i class="fa-regular fa-heart" id ="rating-heart 1" data-number="1" data-recipe="{{recipe.id}}"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 2" data-recipe="{{recipe.id}}" data-number="2"></i>
                         <i class="fa-regular fa-heart" id ="rating-heart 3" data-recipe="{{recipe.id}}" data-number="3"></i>
