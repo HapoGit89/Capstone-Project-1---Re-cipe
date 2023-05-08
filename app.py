@@ -208,61 +208,13 @@ def show_favourites():
 @app.route("/recipes/favourites/<spoonacular_id>/add", methods = ["POST"])
 def add_recipe_to_favourites(spoonacular_id):
     if g.user:
-        user = g.user
-        if Recipes.query.filter_by(spoonacular_id = spoonacular_id).all():
-             recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
-             new_favourite = Favourites(user_id = user.id, recipe_id = recipe.id)
-             db.session.add(new_favourite)
-             db.session.commit()
-             return f"recipe {{recipe.id}} added to favourites for user {{user.id}}"
-        else:
-            recipe = recipe_detail_search(spoonacular_id)
-            
-            new_recipe = Recipes(title = recipe['title'],
-                            spoonacular_id = recipe['spoonacular_id'],
-                            diets = recipe['diets'],
-                            ready_in = recipe['readyIn'],
-                            image_url = recipe['image_url'],
-                            cuisine = recipe['cuisines'],
-                            health_score = recipe['health_score'],
-                            steps = recipe['steps'],
-                            dairy_free = recipe['dairyFree'],
-                            gluten_free = recipe['glutenFree'],
-                            vegan = recipe['vegan'],
-                            vegetarian = recipe ['vegetarian'],
-                            servings = recipe['servings'],
-                            summary = recipe['summary'])
-            db.session.add(new_recipe)
+            user = g.user
+            recipe = Recipes.query.filter_by(spoonacular_id = spoonacular_id).one()
+            new_favourite = Favourites(user_id = user.id, recipe_id = recipe.id)
+            db.session.add(new_favourite)
             db.session.commit()
-            
-            for ingredient in recipe['ingredients']:
-            
-                if Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).all():
-                    ingr = Ingredients.query.filter(Ingredients.spoonacular_id == ingredient['spoonacular_ingredient_id']).one()
-                    if not RecipeIngredients.query.filter(RecipeIngredients.ingredient_id == ingr.id, RecipeIngredients.recipe_id == new_recipe.id).all():
-                        new_recipe_ingredient = RecipeIngredients(recipe_id = new_recipe.id,
-                                                                ingredient_id = ingr.id,
-                                                                    amount = ingredient['amount'])
-                        db.session.add(new_recipe_ingredient)
-                        db.session.commit()
-
-
-                else:
-                    new_ingredient = Ingredients(name = ingredient['name'],
-                                                image = f"https://spoonacular.com/cdn/ingredients_100x100/{ingredient['image']}",
-                                                spoonacular_id = ingredient['spoonacular_ingredient_id'])
-                    db.session.add(new_ingredient)
-                    db.session.commit()
-
-                    new_ingredient = Ingredients.query.filter_by(spoonacular_id = ingredient['spoonacular_ingredient_id']).one()
-                    
-                    new_recipe_ingredient = RecipeIngredients(recipe_id = new_recipe.id,
-                                                                ingredient_id = new_ingredient.id,
-                                                                amount = ingredient['amount'])
-                    db.session.add(new_recipe_ingredient)
-                    db.session.commit()
-            
-            return f"recipe {{recipe.id}} added to favourites for user {{user.id}}" 
+            return f"recipe {{recipe.id}} added to favourites for user {{user.id}}"
+       
 
     else:
         
@@ -280,7 +232,6 @@ def delete_recipe_from_favourites(spoonacular_id):
         db.session.commit()
         return f"recipe {{recipe.id}} removed from favourites for user {{user.id}}"
        
-
     else:
         
         flash(f"You need to be logged in for that", 'danger')
