@@ -64,7 +64,7 @@
                     <h5 class="card-title">{{recipe['title']}} </h5>
 
                     <p>
-                        <a href="/recipes/{{recipe['spoonacular_id']}}" class="btn btn-outline-secondary">See
+                        <a href="/recipes/{{recipe['spoonacular_id']}}" style="background-color: rgb(191, 226, 168)" class="btn btn-outline-secondary">See
                             Details</a>
                         {% if g.user %}
                         {% if recipe['spoonacular_id'] in favourites %}

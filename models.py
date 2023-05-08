@@ -248,7 +248,7 @@ class Ratings(db.Model):
         __table_args__ = (db.UniqueConstraint('recipe_id', 'user_id', name = "rating_comb"),)
 
         def __repr__(self):
-            return f"Rating id:{self.id} for user {self.user_id} and recipe {self.recipe_id} rating {self.rating}"
+            return f"Rating id:{self.id} for user {self.user_id} and recipe {self.recipe_id} is {self.rating}"
 
         id = db.Column(db.Integer,
                    primary_key = True,

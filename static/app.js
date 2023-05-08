@@ -1,5 +1,5 @@
 const stars = document.querySelectorAll('#star');
-const hearts = document.querySelectorAll('#rating-heart');
+const hearts = document.querySelectorAll("[id*='rating-heart']");
 
 
 for (let i = 0; i < stars.length; i++) {
@@ -42,9 +42,15 @@ async function starClick(e){
 
 async function heartClick(e){
 
-
-    resp= axios.post('/recipes/favourites/rating', {recipe_id: e.target.dataset.recipe, rating: e.target.dataset.recipe})
-    console.log(`Recipe Id ${e.target.dataset.recipe}`)
-    console.log(`Star Number ${e.target.dataset.number}`)
+    try{
+        console.log(e.target.dataset.number)
+    resp= axios.post('/recipes/favourites/rating', {recipe_id: e.target.dataset.recipe, rating: e.target.dataset.number})
+    location.reload()
+        console.log(resp)
     return resp
+    }
+    catch(e){
+        location.reload()
+
+    }
 }
