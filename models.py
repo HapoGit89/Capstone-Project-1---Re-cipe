@@ -137,6 +137,16 @@ class Recipes(db.Model):
                         'amount': RecipeIngredients.query.filter(RecipeIngredients.recipe_id == self.id, RecipeIngredients.ingredient_id == ingredient.id).one().amount} for ingredient in self.ingredients]
         return ingredients
     
+    def get_avg_rating(self):
+        ratings = [rating.rating for rating in self.recipe_ratings]
+        ratings_sum= 0
+        for rating in ratings:
+              ratings_sum += rating
+        rating_avg = ratings_sum/len(ratings)
+        return rating_avg
+        
+         
+    
     @classmethod
     def is_recipe_in_db(cls,recipe_spoonacular_id):
         """checks if recipe with spoonacular id is already in db"""
@@ -231,6 +241,8 @@ class Ratings(db.Model):
         """Ratings Table"""
 
         __tablename__ = "ratings"
+
+        __table_args__ = (db.UniqueConstraint('recipe_id', 'user_id', name = "rating_comb"),)
 
         def __repr__(self):
             return f"Rating id:{self.id} for user {self.user_id} and recipe {self.recipe_id} rating {self.rating}"
