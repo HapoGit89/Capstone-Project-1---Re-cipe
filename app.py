@@ -167,7 +167,7 @@ def sign_up_user():
         do_login(user)
         flash(f"Welcome, {user.username}", "success")
 
-        return redirect("/")
+        return redirect("/",302)
        
         
     return render_template("user_signup.html", form = form)
