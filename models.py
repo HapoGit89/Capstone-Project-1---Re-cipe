@@ -278,6 +278,9 @@ class RecipeIngredients(db.Model):
 
         __table_args__ = (db.UniqueConstraint('recipe_id', 'ingredient_id', name = "recipe_id_comb"),)
 
+        def __repr__(self):
+            return f"Ingredient {self.ingredient_id } is in recipe {self.recipe_id} with amount {self.amount}"
+        
         id = db.Column(
             db.Integer,
             primary_key=True
