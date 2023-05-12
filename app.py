@@ -203,7 +203,7 @@ def show_favourites():
         user = g.user
         favourites = user.favourite_recipes
         ratings = {rating.recipe_id: rating.rating for rating in Ratings.query.filter_by(user_id = user.id).all()}
-        print(f"Ratings:{ratings}")
+
         return render_template("favourites.html", favourites = favourites, ratings=ratings)
     else:
         flash(f"You need to be logged in for that", 'danger')

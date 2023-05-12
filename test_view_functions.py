@@ -34,8 +34,20 @@ class ViewFuncTestCase(TestCase):
                                     email="test@test.com",
                                     password="testuser",
                                     )
-
+        
         db.session.commit()
+        new_recipe = Recipes(title="testrecipe", spoonacular_id = 1234)
+        db.session.add(new_recipe)
+        new_recipe2 = Recipes(title="testrecipe2", spoonacular_id = 1235)
+        db.session.add(new_recipe2)
+        db.session.commit()
+        new_favourites=Favourites(recipe_id=new_recipe.id, user_id = self.testuser.id)
+        db.session.add(new_favourites)
+        db.session.commit()
+        
+       
+
+        
 
     
     def test_sign_up(self):
@@ -102,4 +114,60 @@ class ViewFuncTestCase(TestCase):
             with c.session_transaction() as session:
                 user = Users.query.first()
                 self.assertEqual(user.id, session[CURR_USER_KEY])
+                del session[CURR_USER_KEY]
+
+            resp2 = c.post("users/login", data={"username": "testuser", "password": "testus23er"})
+            self.assertEqual(200, resp2.status_code)
+            self.assertIn("Wrong username", str(resp2.data))
+    
+    def test_log_out_user(self):
+        """does logout route work?"""
+
+        with self.client as c:
+            with c.session_transaction() as session:
+                user = Users.query.first()
+                session[CURR_USER_KEY]=user.id
+            resp = c.get("/users/logout")
+            self.assertEqual(302, resp.status_code)
+            self.assertIn('href="/users/login"', str(resp.data))
+
+    def test_show_favourites(self):
+        """does show_favourites route work?"""
+        with self.client as c:
+
+            # test if I get favourites when logged in
+            with c.session_transaction() as session:
+                session[CURR_USER_KEY]=self.testuser.id 
+            resp= c.get("/recipes/favourites")  
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("testrecipe", str(resp.data))
+
+            # test if I get redirected when not logged in
+
+            with c.session_transaction() as session:
+                del session[CURR_USER_KEY]
+            resp= c.get("/recipes/favourites")
+            self.assertEqual(resp.status_code, 302)
+            self.assertIn('href="/"', str(resp.data))
+    
+    def test_add_favourites(self):
+            """check if route for adding favourites works"""
+            with self.client as c:
+                # test if I can add favs when logged in
+                with c.session_transaction() as session:
+                    session[CURR_USER_KEY]=self.testuser.id 
+                resp= c.post("/recipes/favourites/1235/add")  
+                self.assertEqual(resp.status_code, 200)
+                self.assertIn("added to favourites", str(resp.data))
+
+                # check if action gets denied when not logged in
+                with c.session_transaction() as session:
+                    del session[CURR_USER_KEY]
+                resp= c.post("/recipes/favourites/1235/add")  
+                self.assertEqual(resp.status_code, 302)
+                self.assertIn('href="/"', str(resp.data))
+
+
+
+
             
