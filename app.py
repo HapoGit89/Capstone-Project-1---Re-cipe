@@ -284,21 +284,21 @@ def rate_recipe():
         user = g.user
         rating = int(request.json["rating"])
         recipe_id = int(request.json["recipe_id"])
-        print(rating)
+        
         if Ratings.query.filter(Ratings.recipe_id==recipe_id, Ratings.user_id==user.id).all():
-            print("existing rating")
+           
             edit_rating = Ratings.query.filter(Ratings.recipe_id==recipe_id, Ratings.user_id==user.id).one()
             edit_rating.rating = rating
             db.session.add(edit_rating)
             db.session.commit()
-            print(Ratings.query.all())
+            
             return jsonify(edit_rating.serialize_rating(), 200)
         else:
-            print("new rating")
+            
             new_rating = Ratings(user_id=user.id, recipe_id = recipe_id, rating = rating)
             db.session.add(new_rating)
             db.session.commit()
-            print(Ratings.query.all())
+            
             return jsonify(new_rating.serialize_rating(), 200)
     else:
         flash(f"You need to be logged in for that", 'danger')

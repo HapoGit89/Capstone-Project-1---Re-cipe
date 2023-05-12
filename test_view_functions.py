@@ -2,6 +2,7 @@
 
 import os
 from unittest import TestCase
+import json
 
 from models import RecipeIngredients, db, Users, Favourites, Recipes, Ingredients, Ratings
 from wrapper import recipe_detail_search
@@ -27,6 +28,7 @@ class ViewFuncTestCase(TestCase):
         Ingredients.query.delete()
         RecipeIngredients.query.delete()
         Favourites.query.delete()
+        Ratings.query.delete()
 
         self.client = app.test_client()
 
@@ -167,7 +169,94 @@ class ViewFuncTestCase(TestCase):
                 self.assertEqual(resp.status_code, 302)
                 self.assertIn('href="/"', str(resp.data))
 
+    def test_delete_favourites(self):
+            """check if route for deleting favourites works"""
+            with self.client as c:
+
+                # test if I can delete favs when logged in
+                with c.session_transaction() as session:
+                    session[CURR_USER_KEY]=self.testuser.id 
+                resp= c.post("/recipes/favourites/1234/remove")  
+                self.assertEqual(resp.status_code, 200)
+                self.assertIn("removed from favourites", str(resp.data))
+
+                # check if action gets denied when not logged in
+                with c.session_transaction() as session:
+                    del session[CURR_USER_KEY]
+                resp= c.post("/recipes/favourites/1235/remove")  
+                self.assertEqual(resp.status_code, 302)
+                self.assertIn('href="/"', str(resp.data))
+    
+    def test_delete_user(self):
+            """check if route for deleting users works"""
+            with self.client as c:
+
+                # test if I can delete user when logged in
+                with c.session_transaction() as session:
+                    session[CURR_USER_KEY]=self.testuser.id 
+                resp= c.post("/users/delete")  
+                self.assertEqual(resp.status_code, 302)
+                self.assertIn('href="/"', str(resp.data))
+                self.assertEqual(Users.query.all(), [])   ##check if user really is gone from db
+
+
+                # test if I cant delete user when logged out
+                with c.session_transaction() as session:
+                    del session[CURR_USER_KEY]
+                resp= c.post("/users/delete")  
+                self.assertEqual(resp.status_code, 302)
+                self.assertIn('href="/"', str(resp.data))
+
+
+    def test_edit_user(self):
+        """check if user edit route works"""
+        with self.client as c:
+            # does route work logged in?
+            with c.session_transaction() as session:
+                        session[CURR_USER_KEY]=self.testuser.id 
+            resp= c.post("/users/edit", data = {"new_password": "test3", "password_conf": "testuser", "email": "work@work.de"})  #try to change mail and password
+            self.assertEqual(resp.status_code, 302)
+            self.assertIn('href="/"', str(resp.data))
+            self.assertEqual(Users.query.first().email, "work@work.de" )  #did email got changed?
+
+            #check if password confirmation works
+            with c.session_transaction() as session:
+                        session[CURR_USER_KEY]=self.testuser.id 
+            resp= c.post("/users/edit", data = {"new_password": "", "password_conf": "testuser", "email": "test@test.de"})  #try to change mail 
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Wrong password", str(resp.data)) #
 
 
 
+              # does route not work logged out?
+            with c.session_transaction() as session:
+                        del session[CURR_USER_KEY]
+            resp= c.post("/users/edit", data = {"new_password": "test3", "password_conf": "testuser", "email": "test@test.de"})  # try to change mail
+            self.assertEqual(resp.status_code, 302)
+            self.assertIn('href="/"', str(resp.data))
+            self.assertEqual(Users.query.first().email, "work@work.de" )  # email should stay the same because user was logged out
+
+    def test_rating_route(self):
+         """check if rating route works"""
+         with self.client as c:
+            # does route work logged in?
+            with c.session_transaction() as session:
+                        session[CURR_USER_KEY]=self.testuser.id 
+            recipe = Recipes.query.first()
+            resp= c.post("/recipes/favourites/rating", json= ({'rating': '3', 'recipe_id': f"{recipe.id}"}))
+            self.assertEqual(resp.status_code, 200)
+            self.assertEqual(Recipes.query.first().recipe_ratings[0].rating, 3)  #is rating existent in db?
             
+            #is rating overwritable via route?
+            recipe = Recipes.query.first()
+            resp= c.post("/recipes/favourites/rating", json= ({'rating': '4', 'recipe_id': f"{recipe.id}"}))
+            self.assertEqual(resp.status_code, 200)
+            self.assertEqual(Recipes.query.first().recipe_ratings[0].rating, 4)  
+
+            # does route work not logged in?
+            with c.session_transaction() as session:
+                        del session[CURR_USER_KEY]
+            recipe = Recipes.query.first()
+            resp= c.post("/recipes/favourites/rating", json= ({'rating': '3', 'recipe_id': f"{recipe.id}"}))
+            self.assertEqual(resp.status_code, 302)
+            self.assertIn('href="/"', str(resp.data)) 
