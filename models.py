@@ -12,6 +12,10 @@ def connect_db(app):
     db.app = app
     db.init_app(app)
 
+# Hier kenn ich mich nicht so aus.
+# Im Allgemeinen würde ich Tables eher in SQL selber definieren, und die App eher die Queries machen lassen. Das war aber wahrscheinlich kein Requirement 🙃
+# Es kann viel schief gehen, wenn DB-Initialization-Code in der App ausgeführt wird; z.B. dass du einfach ausversehen eine Spalte löscht, die du an einer anderen Stelle in einem GUI hinzugefügt hast.
+# Aber ich weiß auch nicht, was da die BestPractice in Python-Land ist.
 
 class Users(db.Model):
     """ Users Table """
@@ -153,10 +157,8 @@ class Recipes(db.Model):
     @classmethod
     def is_recipe_in_db(cls,recipe_spoonacular_id):
         """checks if recipe with spoonacular id is already in db"""
-        if cls.query.filter(cls.spoonacular_id == recipe_spoonacular_id).all():
-             return True
-        else:
-             return False
+        # returned .all() einen boolean? Dann kannst du das auch einfach direkt machen:
+        return cls.query.filter(cls.spoonacular_id == recipe_spoonacular_id).all()
     
     @classmethod
     def add_new_recipe(cls, recipe):
@@ -207,10 +209,7 @@ class Ingredients(db.Model):
 
         @classmethod
         def is_ingredient_in_db(cls, ingredient_spoonacular_id):
-             if cls.query.filter(cls.spoonacular_id == ingredient_spoonacular_id).all():
-                return True
-             else:
-                  return False
+             return cls.query.filter(cls.spoonacular_id == ingredient_spoonacular_id).all()
 
     
              
@@ -296,10 +295,7 @@ class RecipeIngredients(db.Model):
 
         @classmethod
         def is_recipe_ingredient_in_db(cls, recipe, ingredient):
-            if cls.query.filter(cls.ingredient_id == ingredient.id, cls.recipe_id == recipe.id).all():
-                return True
-            else:
-                 return False
+            return cls.query.filter(cls.ingredient_id == ingredient.id, cls.recipe_id == recipe.id).all()
         
         @classmethod
         def add_new_recipe_ingredient(cls, recipe, ingredient, amount):

@@ -1,56 +1,89 @@
-const stars = document.querySelectorAll('#star');
-const hearts = document.querySelectorAll("[id*='rating-heart']");
+class StarHandler {
+  constructor() {
+    this.init();
+    this.likedClassName = 'fa-solid';
+    this.unlikedClassName = 'fa-regular';
+  }
 
+  init() {
+    const stars = document.querySelectorAll('#star');
+    for (const star of stars) {
+      star.addEventListener('click', e => this.onStarClick(e));
+    }
+  }
 
-for (let i = 0; i < stars.length; i++) {
-    stars[i].addEventListener("click", starClick)
+  isLiked(classList) {
+    return classList.contains(this.likedClassName);
+  }
+
+  setToLiked(classList) {
+    classList.remove(this.unlikedClassName);
+    classList.add(this.likedClassName);
+  }
+
+  setToUnliked(classList) {
+    classList.remove(this.unlikedClassName);
+    classList.add(this.likedClassName);
+  }
+
+  async onStarClick(e) {
+    const starClassList = e.target.classList;
+    const recipeId = e.target.dataset.recipe;
+
+    if (!this.isLiked(starClassList)) {
+      try {
+        this.setToLiked(starClassList);
+        await this.saveLike(recipeId);
+      } catch (e) {
+        this.setToUnliked(starClassList);
+      }
+    } else {
+      try {
+        this.setToUnliked(starClassList);
+        await this.removeLike(recipeId);
+      } catch (e) {
+        this.setToLiked(starClassList);
+      }
+    }
+  }
+
+  async saveLike(recipeId) {
+    return await axios.post(`/recipes/favourites/${recipeId}/add`);
+  }
+
+  async removeLike(recipeId) {
+    return await axios.post(`/recipes/favourites/${recipeId}/remove`);
+  }
 }
 
-for (let i = 0; i < hearts.length; i++) {
-    hearts[i].addEventListener("click", heartClick)
+class HeartHandler {
+  constructor() {
+    const hearts = document.querySelectorAll("[id*='rating-heart']");
+    for (const heart of hearts) {
+      heart.addEventListener('click', e => this.onHeartClick(e));
+    }
+  }
+
+  async onHeartClick(e) {
+    const rating = e.target.dataset.number;
+    const recipeId = e.target.dataset.recipe;
+
+    try {
+      await axios.post('/recipes/favourites/rating', {
+        recipe_id: recipeId,
+        rating: rating,
+      });
+
+      location.reload();
+
+      // dieser return sollte egal sein, weil du die seite neu lädst
+      return null;
+    } catch (e) {
+      console.error(e);
+      location.reload();
+    }
+  }
 }
 
-async function starClick(e){
-    if (e.target.classList.contains('fa-regular')){
-        try{
-        const resp = await axios.post(`/recipes/favourites/${e.target.dataset.recipe}/add`)
-            e.target.classList.remove('fa-regular')
-            e.target.classList.add('fa-solid')
-            return resp
-        }
-        catch(e) {
-         e.target.classList.remove('fa-solid')
-        e.target.classList.add('fa-regular')
-        }
-        
-    }
-    else {
-        try{
-        const resp = await axios.post(`/recipes/favourites/${e.target.dataset.recipe}/remove`)
-            e.target.classList.remove('fa-solid')
-            e.target.classList.add('fa-regular')
-            return resp
-        }
-        catch(e){
-            e.target.classList.remove('fa-regular')
-            e.target.classList.add('fa-solid')
-        }
-        
-        
-    }
-}
-
-async function heartClick(e){
-
-    try{
-        console.log(e.target.dataset.number)
-    resp= axios.post('/recipes/favourites/rating', {recipe_id: e.target.dataset.recipe, rating: e.target.dataset.number})
-    location.reload()
-        console.log(resp)
-    return resp
-    }
-    catch(e){
-        location.reload()
-
-    }
-}
+new StarHandler();
+new HeartHandler();

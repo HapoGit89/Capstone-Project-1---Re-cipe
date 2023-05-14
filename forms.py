@@ -13,6 +13,7 @@ intolerances = [('', 'None'),('dairy', 'Dairy'), ('egg', 'Egg'), ('gluten', 'Glu
 
 
 
+# Das ist ne sehr nice File. Man checkt sehr schnell was es sein soll, und du scheinst eine zentrale Stelle zu haben, an der man Sachen ändern kann.
 
 class SearchForm(FlaskForm):
     """Form for complex recipe search"""
