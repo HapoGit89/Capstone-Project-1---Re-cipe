@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgres://recipe_pice_user:Ytp2P8vsfElgLKeFPTCpMyTWztC2NKxp@dpg-chft7ru7avjbbjq9d9n0-a.frankfurt-postgres.render.com/recipe_pice'))
+    os.environ.get('DATABASE_URL', 'postgresql:///recipe'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "SHHHHH Secret")
